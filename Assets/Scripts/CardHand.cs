@@ -2,13 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardHand
+public class CardHand : MonoBehaviour
 {
-    private ICollection<Card> cards = new List<Card>();
+    private ICollection<GameObject> cards = new List<GameObject>();
+    public Vector3 cardOffset = new Vector3(0.5f, 0, 0);
 
-    public void AddCard(Card c)
+    public void AddCard(GameObject card)
     {
-        cards.Add(c);
+        if (card.GetComponent<Card>() != null)
+        {
+            RegisterCardInHand(card);
+            PositionNewCard(card);
+        }
+    }
+
+    private void RegisterCardInHand(GameObject card)
+    {
+        cards.Add(card);
+        card.GetComponent<Card>().hand = this;
+    }
+
+    private void PositionNewCard(GameObject card)
+    {
+        card.transform.parent = transform;
+        card.transform.Rotate(0, 180, 0);
+        int cardIndex = cards.Count - 1;
+        card.transform.position = transform.position + (cardOffset * cardIndex);
     }
 
     public void ClearHand()
@@ -18,11 +37,23 @@ public class CardHand
 
     public int GetHandValue()
     {
+        int sum = 0;
+        foreach (GameObject c in cards)
+        {
+            sum += c.GetComponent<Card>().GetValue();
+        }
         return 0;
     }
 
     public bool ContainsAten()
     {
+        foreach (GameObject c in cards)
+        {
+            if (c.GetComponent<Card>().GetValue() == 10)
+            {
+                return true;
+            }
+        }
         return false;
     }
 }

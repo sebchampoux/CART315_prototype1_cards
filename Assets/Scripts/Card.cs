@@ -5,10 +5,14 @@ using UnityEngine;
 public class Card : MonoBehaviour
 {
     public int cardValue = 0;
-    protected CardHand hand = null;
+    public CardHand hand { get; set; } = null;
 
+    /// <summary>
+    /// Value of the card
+    /// </summary>
+    /// <returns>Value of the card</returns>
     public virtual int GetValue()
     {
-        return 0;
+        return cardValue;
     }
 }

@@ -26,7 +26,7 @@ public class CardDeck : MonoBehaviour
     /// </summary>
     private void ShuffleDeck()
     {
-        for (int i = cardsDeck.Length; i > 1; i--)
+        for (int i = cardsDeck.Length - 1; i > 1; i--)
         {
             int k = Random.Range(0, cardsDeck.Length - 1);
             GameObject toSwap = cardsDeck[k];
@@ -36,13 +36,13 @@ public class CardDeck : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves the pointer, draws and returns a card
+    /// Moves the pointer, draws and returns a copy of the current card
     /// </summary>
     /// <returns>Card prefab</returns>
     public GameObject DrawCard()
     {
         currentCard++;
-        return cardsDeck[currentCard];
+        return Instantiate(cardsDeck[currentCard]);
     }
 
     /// <summary>
