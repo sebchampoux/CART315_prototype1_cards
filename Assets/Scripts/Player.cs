@@ -2,27 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : AbstractPlayer
 {
-    [SerializeField] private BlackjackGame game;
-    [SerializeField] private CardHand cardHand;
     [SerializeField] private int cash = 500;
     [SerializeField] private int betAmount = 50;
     [HideInInspector] public int currentBet { get; private set; } = 0;
-
-    /// <summary>
-    /// Start a round
-    /// </summary>
-    public void StartRound()
-    {
-        ResetCurrentBet();
-        Bet();
-    }
-
-    public void AddCardToHand(GameObject card)
-    {
-        cardHand.AddCard(card);
-    }
 
     /// <summary>
     /// Resets the player's current bet to 0
@@ -50,8 +34,9 @@ public class Player : MonoBehaviour
 
     }
 
-    public int GetHandValue()
+    public override void PlayRound()
     {
-        return cardHand.GetHandValue();
+        ResetCurrentBet();
+        Bet();
     }
 }

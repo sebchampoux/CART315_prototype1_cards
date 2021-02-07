@@ -25,13 +25,16 @@ public class CardHand : MonoBehaviour
     private void PositionNewCard(GameObject card)
     {
         card.transform.parent = transform;
-        card.transform.Rotate(0, 180, 0);
         int cardIndex = cards.Count - 1;
         card.transform.position = transform.position + (cardOffset * cardIndex);
     }
 
     public void ClearHand()
     {
+        foreach (GameObject c in cards)
+        {
+            Destroy(c);
+        }
         cards.Clear();
     }
 

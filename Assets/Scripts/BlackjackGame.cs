@@ -7,22 +7,40 @@ public class BlackjackGame : MonoBehaviour
     public static readonly int BLACKJACK = 21;
     public CardDeck cardDeck;
     public Player[] players;
-    // Comment est-ce que j'implémente le dealer exactement?
-    //public GameObject dealer;
+    public Dealer dealer;
+
+    /// <summary>
+    /// Draws a card and adds it to player's hand
+    /// </summary>
+    /// <param name="player">Player that draws</param>
+    public void PlayerDrawsCard(AbstractPlayer player)
+    {
+        GameObject newCard = cardDeck.DrawCard();
+        player.AddCardToHand(newCard);
+    }
+
+    /// <summary>
+    /// Ends player's turn
+    /// </summary>
+    /// <param name="player">Player that ends its turn</param>
+    public void EndPlayerTurn(AbstractPlayer player)
+    {
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         // For each round
-        // Prepare deck of cards
-        // Distribute cards
-        // Check for blackjack, if yes distribute $$
-        // for each player : play turn
-        // dealer plays
-        // for each player not eliminated : give money
+        // [X] Prepare deck of cards
+        // [X] Distribute cards
+        // [ ] Check for blackjack, if yes distribute $$
+        // [ ] for each player : play turn
+        // [ ] dealer plays
+        // [ ] for each player not eliminated : give money
         cardDeck.ResetDeck();
         DistributeCards();
-        //CheckForNaturals();
+        CheckForNaturals();
     }
 
     /// <summary>
@@ -32,11 +50,23 @@ public class BlackjackGame : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
+            // Draw a card for each player
+            GameObject card;
             foreach (Player p in players)
             {
-                GameObject card = cardDeck.DrawCard();
+                card = cardDeck.DrawCard();
+                card.GetComponent<Card>().FlipCard();
                 p.AddCardToHand(card);
             }
+
+            // Draw a card for the dealer
+            // Only make first card visible
+            card = cardDeck.DrawCard();
+            if (i == 0)
+            {
+                card.GetComponent<Card>().FlipCard();
+            }
+            dealer.AddCardToHand(card);
         }
     }
 
