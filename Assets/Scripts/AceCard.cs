@@ -6,12 +6,7 @@ public class AceCard : Card
 {
     public override int GetValue()
     {
-        if (hand.ContainsAten())
-        {
-            return 11;
-        } else
-        {
-            return 1;
-        }
+        // Not a very sophisticated implementation but will do for now
+        return hand.HandHasTwoCards() ? 11 : 1;
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
-    private ICollection<GameObject> cards = new List<GameObject>();
-    public Vector3 cardOffset = new Vector3(0.5f, 0, 0);
+    private IList<GameObject> cards = new List<GameObject>();
+    public Vector3 cardOffset = new Vector3(0.5f, 0, -5.0f);
 
     public void AddCard(GameObject card)
     {
@@ -45,18 +45,28 @@ public class CardHand : MonoBehaviour
         {
             sum += c.GetComponent<Card>().GetValue();
         }
-        return 0;
+        return sum;
     }
 
-    public bool ContainsAten()
+    /// <summary>
+    /// Open up all hidden cards
+    /// </summary>
+    public void FlipAllCards()
     {
         foreach (GameObject c in cards)
         {
-            if (c.GetComponent<Card>().GetValue() == 10)
-            {
-                return true;
-            }
+            c.GetComponent<Card>().FlipCard();
         }
-        return false;
+    }
+
+    /// <returns>Whether the hand contains only two cards</returns>
+    public bool HandHasTwoCards()
+    {
+        return cards.Count == 2;
+    }
+
+    public Card GetFirstCard()
+    {
+        return cards[0].GetComponent<Card>();
     }
 }

@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractPlayer : MonoBehaviour
+public abstract class AbstractPlayer : MonoBehaviour, Observable
 {
+    public GameObject[] observers;
     public BlackjackGame game;
     public CardHand cardHand;
 
     /// <summary>
     /// Reset the player's state before starting a new round
     /// </summary>
-    public void ClearRound()
+    public virtual void ClearRound()
     {
         cardHand.ClearHand();
+        NotifyObservers();
     }
 
     /// <summary>
@@ -21,7 +23,9 @@ public abstract class AbstractPlayer : MonoBehaviour
     /// <param name="card">Card gameobject</param>
     public void AddCardToHand(GameObject card)
     {
+        card.GetComponent<Card>().FlipCard(); // All new cards are face up
         cardHand.AddCard(card);
+        NotifyObservers();
     }
 
     /// <summary>
@@ -33,9 +37,24 @@ public abstract class AbstractPlayer : MonoBehaviour
         return cardHand.GetHandValue();
     }
 
-    protected void DrawCard()
+    public void DrawCard()
     {
         game.PlayerDrawsCard(this);
+        if (cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
+        {
+            game.EndPlayerTurn(this);
+        }
+        NotifyObservers();
+    }
+    public void NotifyObservers()
+    {
+        foreach (GameObject g in observers)
+        {
+            if (g.GetComponent<Observer>() != null)
+            {
+                g.GetComponent<Observer>().Update();
+            }
+        }
     }
 
     /// <summary>

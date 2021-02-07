@@ -6,11 +6,11 @@ public class Card : MonoBehaviour
 {
     [SerializeField] private int cardValue = 0;
     public CardHand hand { get; set; } = null;
-    private bool cardIsHidden = true;
+    private bool cardIsVisible = false;
 
     public void Start()
     {
-        if (!cardIsHidden)
+        if (cardIsVisible)
         {
             FlipCard();
         }
@@ -30,6 +30,10 @@ public class Card : MonoBehaviour
     /// </summary>
     public void FlipCard()
     {
-        transform.Rotate(0, 180, 0);
+        if (!cardIsVisible)
+        {
+            cardIsVisible = true;
+            transform.Rotate(0, 180, 0);
+        }
     }
 }
