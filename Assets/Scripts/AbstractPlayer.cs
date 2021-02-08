@@ -52,7 +52,7 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
         {
             if (g.GetComponent<Observer>() != null)
             {
-                g.GetComponent<Observer>().Update();
+                g.GetComponent<Observer>().UpdateObserver();
             }
         }
     }

@@ -214,6 +214,7 @@ GameObject:
   - component: {fileID: 341197150}
   - component: {fileID: 341197149}
   - component: {fileID: 341197148}
+  - component: {fileID: 341197151}
   m_Layer: 5
   m_Name: Stay Button
   m_TagString: Untagged
@@ -335,6 +336,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341197146}
   m_CullTransparentMesh: 1
+--- !u!114 &341197151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341197146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game: {fileID: 375622229}
+  player: {fileID: 812967509}
 --- !u!1 &375622228
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +379,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c233c6be69f7247907eacad9ee0dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  observers:
+  - {fileID: 341197146}
+  - {fileID: 1105965953}
+  - {fileID: 2131864472}
   cardDeck: {fileID: 418505911}
   players:
   - {fileID: 812967509}
@@ -893,6 +912,7 @@ GameObject:
   - component: {fileID: 1105965957}
   - component: {fileID: 1105965956}
   - component: {fileID: 1105965955}
+  - component: {fileID: 1105965958}
   m_Layer: 5
   m_Name: Hit Button
   m_TagString: Untagged
@@ -1014,6 +1034,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105965953}
   m_CullTransparentMesh: 1
+--- !u!114 &1105965958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105965953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game: {fileID: 375622229}
+  player: {fileID: 812967509}
 --- !u!1 &1156770429
 GameObject:
   m_ObjectHideFlags: 0
@@ -1318,6 +1352,7 @@ GameObject:
   - component: {fileID: 2131864476}
   - component: {fileID: 2131864475}
   - component: {fileID: 2131864474}
+  - component: {fileID: 2131864477}
   m_Layer: 5
   m_Name: Dbl down Button
   m_TagString: Untagged
@@ -1439,3 +1474,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131864472}
   m_CullTransparentMesh: 1
+--- !u!114 &2131864477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131864472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game: {fileID: 375622229}
+  player: {fileID: 812967509}

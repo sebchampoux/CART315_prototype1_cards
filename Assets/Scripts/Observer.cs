@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface Observer
 {
-    public abstract void Update();
+    public abstract void UpdateObserver();
 }

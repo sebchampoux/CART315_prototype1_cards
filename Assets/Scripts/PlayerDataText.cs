@@ -7,11 +7,11 @@ public class PlayerDataText : MonoBehaviour, Observer
 {
     public Player player;
 
-    void Observer.Update()
+    public void UpdateObserver()
     {
         Text text = GetComponent<Text>();
-        text.text = "Current bet: " + player.currentBet
-            + "\nCurrent cash: " + player.cash
+        text.text = "Current bet: " + player.CurrentBet
+            + "\nCurrent cash: " + player.Cash
             + "\nCurrent hand value: " + player.GetHandValue();
     }
 }

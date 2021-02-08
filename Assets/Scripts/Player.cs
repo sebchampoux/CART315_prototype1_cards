@@ -4,15 +4,43 @@ using UnityEngine;
 
 public class Player : AbstractPlayer
 {
-    public float cash { get; private set; } = 500;
-    public float betAmount { get; private set; } = 50;
-    public float currentBet { get; private set; } = 0;
+    private float _cash = 500;
+    private float _betAmount = 50;
+    private float _currentBet = 0;
+
+    public float Cash
+    {
+        get { return _cash; }
+        private set
+        {
+            _cash = value;
+            NotifyObservers();
+        }
+    }
+    public float BetAmount
+    {
+        get { return _betAmount; }
+        private set
+        {
+            _betAmount = value;
+            NotifyObservers();
+        }
+    }
+
+    public float CurrentBet
+    {
+        get { return _currentBet; }
+        private set
+        {
+            _currentBet = value;
+            NotifyObservers();
+        }
+    }
 
     public override void ClearRound()
     {
         base.ClearRound();
         ResetCurrentBet();
-        NotifyObservers();
     }
 
     /// <summary>
@@ -20,8 +48,7 @@ public class Player : AbstractPlayer
     /// </summary>
     public void ResetCurrentBet()
     {
-        currentBet = 0.0f;
-        NotifyObservers();
+        _currentBet = 0.0f;
     }
 
     /// <summary>
@@ -30,9 +57,8 @@ public class Player : AbstractPlayer
     /// <param name="winRatio">How much was won (does NOT include the player's bet)</param>
     public void WinRound(float winRatio = 1.0f)
     {
-        cash += currentBet * Mathf.Abs(winRatio);
+        _cash += _currentBet * Mathf.Abs(winRatio);
         GetBackCurrentBet();
-        NotifyObservers();
     }
 
     /// <summary>
@@ -40,17 +66,15 @@ public class Player : AbstractPlayer
     /// </summary>
     public void Bet()
     {
-        float bet = Mathf.Min(cash, betAmount);
-        cash -= bet;
-        currentBet += bet;
-        NotifyObservers();
+        float bet = Mathf.Min(_cash, _betAmount);
+        _cash -= bet;
+        _currentBet += bet;
     }
 
     public void GetBackCurrentBet()
     {
-        cash += currentBet;
-        currentBet = 0.0f;
-        NotifyObservers();
+        _cash += _currentBet;
+        _currentBet = 0.0f;
     }
 
     /// <summary>
@@ -72,6 +96,5 @@ public class Player : AbstractPlayer
         Bet();
         DrawCard();
         game.EndPlayerTurn(this);
-        NotifyObservers();
     }
 }

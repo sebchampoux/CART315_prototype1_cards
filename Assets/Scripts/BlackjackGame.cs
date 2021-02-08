@@ -3,13 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlackjackGame : MonoBehaviour
+public class BlackjackGame : MonoBehaviour, Observable
 {
     public static readonly int BLACKJACK = 21;
+
+    public GameObject[] observers;
     public CardDeck cardDeck;
     public Player[] players;
     public Dealer dealer;
     public bool gameIsRunning = true;
+    private AbstractPlayer _currentPlayer = null;
+
+    public AbstractPlayer CurrentPlayer
+    {
+        get { return _currentPlayer; }
+        private set
+        {
+            _currentPlayer = value;
+            NotifyObservers();
+        }
+    }
 
     /// <summary>
     /// Draws a card and adds it to player's hand
@@ -33,29 +46,20 @@ public class BlackjackGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // For each round
-        // [X] Prepare deck of cards
-        // [X] Distribute cards
-        // [X] Check for blackjack, if yes distribute $$
-        // [ ] for each player : play turn
-        // [X] dealer plays
-        // [X] for each player not eliminated : give money
         while (gameIsRunning)
         {
-
             cardDeck.ResetDeck();
             DistributeCards();
             TakeInitialBets();
-            
             // Temporaire
             break;
 
-            if (Naturals())
-            {
-                continue;
-            }
-            PlayersPlayTurns();
-            EndTurn();
+            //if (Naturals())
+            //{
+            //    continue;
+            //}
+            //PlayersPlayTurns();
+            //EndTurn();
 
             // Un seul tour pour le moment
             gameIsRunning = false;
@@ -64,7 +68,7 @@ public class BlackjackGame : MonoBehaviour
 
     private void TakeInitialBets()
     {
-        foreach( Player p in players)
+        foreach (Player p in players)
         {
             p.Bet();
         }
@@ -153,9 +157,12 @@ public class BlackjackGame : MonoBehaviour
     {
         foreach (Player p in players)
         {
+            CurrentPlayer = p;
             p.PlayRound();
         }
+        CurrentPlayer = dealer;
         dealer.PlayRound();
+        CurrentPlayer = null;
     }
 
     /// <summary>
@@ -166,36 +173,52 @@ public class BlackjackGame : MonoBehaviour
         int dealersHand = dealer.GetHandValue();
         if (dealersHand > 21)
         {
-            // Dealer busted
-            foreach (Player p in players)
-            {
-                if (p.GetHandValue() <= BLACKJACK)
-                {
-                    p.WinRound();
-                }
-                else
-                {
-                    p.ResetCurrentBet();
-                }
-            }
+            EndRoundDealerBusted();
         }
         else
         {
-            foreach (Player p in players)
+            EndRoundDealerDidNotBust(dealersHand);
+        }
+    }
+
+    /// <summary>
+    /// End the round if the dealer did not go over 21
+    /// </summary>
+    /// <param name="dealersHand">Value of the dealer's hand</param>
+    private void EndRoundDealerDidNotBust(int dealersHand)
+    {
+        foreach (Player p in players)
+        {
+            int playersHand = p.GetHandValue();
+            if (playersHand > BLACKJACK || playersHand < dealersHand)
             {
-                int playersHand = p.GetHandValue();
-                if (playersHand > BLACKJACK || playersHand < dealersHand)
-                {
-                    p.ResetCurrentBet();
-                }
-                else if (playersHand == dealersHand)
-                {
-                    p.GetBackCurrentBet();
-                }
-                else
-                {
-                    p.WinRound();
-                }
+                p.ResetCurrentBet();
+            }
+            else if (playersHand == dealersHand)
+            {
+                p.GetBackCurrentBet();
+            }
+            else
+            {
+                p.WinRound();
+            }
+        }
+    }
+
+    /// <summary>
+    /// End the round if the dealer went over 21
+    /// </summary>
+    private void EndRoundDealerBusted()
+    {
+        foreach (Player p in players)
+        {
+            if (p.GetHandValue() <= BLACKJACK)
+            {
+                p.WinRound();
+            }
+            else
+            {
+                p.ResetCurrentBet();
             }
         }
     }
@@ -204,5 +227,17 @@ public class BlackjackGame : MonoBehaviour
     {
         gameIsRunning = false;
         Application.Quit();
+    }
+
+    public void NotifyObservers()
+    {
+        foreach (GameObject g in observers)
+        {
+            Observer observer = g.GetComponent<Observer>();
+            if (observer != null)
+            {
+                observer.UpdateObserver();
+            }
+        }
     }
 }
