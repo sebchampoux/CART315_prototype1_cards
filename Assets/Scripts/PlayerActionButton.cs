@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerActionButton : MonoBehaviour, Observer
 {
-    public BlackjackGame game;
     public AbstractPlayer player;
 
     public void Start()
@@ -20,6 +19,6 @@ public class PlayerActionButton : MonoBehaviour, Observer
 
     private void ToggleButtonActivation()
     {
-        GetComponent<Button>().interactable = (game.CurrentPlayer == player);
+        GetComponent<Button>().interactable = player.IsPlaying;
     }
 }

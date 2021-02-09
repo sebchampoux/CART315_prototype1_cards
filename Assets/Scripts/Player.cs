@@ -13,7 +13,7 @@ public class Player : AbstractPlayer
         get { return _cash; }
         private set
         {
-            _cash = value;
+            _cash = Mathf.Max(value, 0.0f);
             NotifyObservers();
         }
     }
@@ -22,7 +22,7 @@ public class Player : AbstractPlayer
         get { return _betAmount; }
         private set
         {
-            _betAmount = value;
+            _betAmount = Mathf.Max(value, 0.0f);
             NotifyObservers();
         }
     }
@@ -32,7 +32,7 @@ public class Player : AbstractPlayer
         get { return _currentBet; }
         private set
         {
-            _currentBet = value;
+            _currentBet = Mathf.Max(value, 0.0f);
             NotifyObservers();
         }
     }
@@ -77,16 +77,20 @@ public class Player : AbstractPlayer
         _currentBet = 0.0f;
     }
 
-    public override IEnumerator PlayRound()
-    {
-        Debug.Log("Wait for player play");
-        yield return null; // Coroutine will be stopped by EndTurn
-    }
-
     public void DoubleDown()
     {
         Bet();
         DrawCard();
         EndTurn();
+    }
+
+    /// <summary>
+    /// For the player, the card is always open
+    /// </summary>
+    /// <param name="card"></param>
+    public override void AddCardToHand(GameObject card)
+    {
+        base.AddCardToHand(card);
+        card.GetComponent<Card>().FlipCard();
     }
 }

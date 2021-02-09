@@ -4,9 +4,23 @@ using UnityEngine;
 
 public abstract class AbstractPlayer : MonoBehaviour, Observable
 {
-    public GameObject[] observers;
-    public BlackjackGame game;
-    public CardHand cardHand;
+    [SerializeField] protected GameObject[] observers;
+    [SerializeField] protected BlackjackGame game;
+    [SerializeField] protected CardHand cardHand;
+    protected bool _isPlaying = false;
+
+    public bool IsPlaying
+    {
+        get
+        {
+            return _isPlaying;
+        }
+        protected set
+        {
+            _isPlaying = value;
+            NotifyObservers();
+        }
+    }
 
     /// <summary>
     /// Reset the player's state before starting a new round
@@ -21,9 +35,8 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     /// Add a card to player's hand
     /// </summary>
     /// <param name="card">Card gameobject</param>
-    public void AddCardToHand(GameObject card)
+    public virtual void AddCardToHand(GameObject card)
     {
-        card.GetComponent<Card>().FlipCard(); // All new cards are face up
         cardHand.AddCard(card);
         NotifyObservers();
     }
@@ -59,12 +72,15 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     }
 
     /// <summary>
-    /// Plays the player's round
+    /// Starts the player's turn
     /// </summary>
-    public abstract IEnumerator PlayRound();
+    public virtual void PlayTurn()
+    {
+        IsPlaying = true;
+    }
 
     public void EndTurn()
     {
-        StopCoroutine(PlayRound());
+        IsPlaying = false;
     }
 }

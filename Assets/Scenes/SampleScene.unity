@@ -123,6 +123,86 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &189525999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 189526000}
+  - component: {fileID: 189526002}
+  - component: {fileID: 189526001}
+  m_Layer: 5
+  m_Name: Instructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &189526000
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189525999}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1165855601}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -432.47067, y: 270.9397}
+  m_SizeDelta: {x: 451.2849, y: 63.3792}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &189526001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189525999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 21
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 7
+    m_MaxSize: 53
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Get a higher score than the dealer, but don't bust 21 or you'll lose your
+    bet!
+--- !u!222 &189526002
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189525999}
+  m_CullTransparentMesh: 1
 --- !u!1 &247566880
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +361,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 341197149}
   m_OnClick:
     m_PersistentCalls:
@@ -348,7 +428,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 375622229}
   player: {fileID: 812967509}
 --- !u!1 &375622228
 GameObject:
@@ -379,10 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c233c6be69f7247907eacad9ee0dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  observers:
-  - {fileID: 341197146}
-  - {fileID: 1105965953}
-  - {fileID: 2131864472}
+  observers: []
   cardDeck: {fileID: 418505911}
   players:
   - {fileID: 812967509}
@@ -624,7 +700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c088121fad4cec4ebbb51edcf54b0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  observers: []
+  observers:
+  - {fileID: 761986898}
   game: {fileID: 375622229}
   cardHand: {fileID: 1882692896}
   stopAt: 17
@@ -663,8 +740,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 380, y: -241.00612}
-  m_SizeDelta: {x: 459.754, y: 89.8448}
+  m_AnchoredPosition: {x: 382.1172, y: -225.4673}
+  m_SizeDelta: {x: 455.5195, y: 124.7794}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &761986900
 MonoBehaviour:
@@ -699,11 +776,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Current bet: 0
-
-    Current cash: 0
-
-    Current hand value: 0'
+  m_Text: '[Player data]'
 --- !u!222 &761986901
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -725,6 +798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 812967509}
+  dealer: {fileID: 574508967}
 --- !u!1 &812967508
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +830,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   observers:
   - {fileID: 761986898}
+  - {fileID: 341197146}
+  - {fileID: 1105965953}
+  - {fileID: 2131864472}
   game: {fileID: 375622229}
   cardHand: {fileID: 836358332}
 --- !u!4 &812967510
@@ -797,7 +874,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 836358330}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -979,7 +1056,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1105965956}
   m_OnClick:
     m_PersistentCalls:
@@ -1046,7 +1123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 375622229}
   player: {fileID: 812967509}
 --- !u!1 &1156770429
 GameObject:
@@ -1209,6 +1285,7 @@ RectTransform:
   - {fileID: 1105965954}
   - {fileID: 2131864473}
   - {fileID: 761986899}
+  - {fileID: 189526000}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1419,7 +1496,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2131864475}
   m_OnClick:
     m_PersistentCalls:
@@ -1486,5 +1563,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 375622229}
   player: {fileID: 812967509}

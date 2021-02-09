@@ -37,8 +37,14 @@ public class BlackjackGame : MonoBehaviour, Observable
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(GameLoop());
+    }
+
+    private IEnumerator GameLoop()
+    {
         while (gameIsRunning)
         {
+            ClearRound();
             cardDeck.ResetDeck();
             DistributeCards();
             TakeInitialBets();
@@ -46,13 +52,20 @@ public class BlackjackGame : MonoBehaviour, Observable
             {
                 continue;
             }
-            PlayersPlayTurns();
-            Debug.Log("After player played their turn");
-            //EndTurn();
-
-            // Un seul tour pour le moment
-            gameIsRunning = false;
+            yield return PlayersPlayTurns();
+            EndRound();
         }
+        yield return null;
+    }
+
+    private void ClearRound()
+    {
+        foreach (Player p in players)
+        {
+            p.ResetCurrentBet();
+            p.ClearRound();
+        }
+        dealer.ClearRound();
     }
 
     private void TakeInitialBets()
@@ -75,7 +88,6 @@ public class BlackjackGame : MonoBehaviour, Observable
             foreach (Player p in players)
             {
                 card = cardDeck.DrawCard();
-                card.GetComponent<Card>().FlipCard();
                 p.AddCardToHand(card);
             }
 
@@ -142,27 +154,33 @@ public class BlackjackGame : MonoBehaviour, Observable
     /// <summary>
     /// Each players (including the dealer) play their turns
     /// </summary>
-    private void PlayersPlayTurns()
+    private IEnumerator PlayersPlayTurns()
     {
+        // Players play their turn
         foreach (Player p in players)
         {
             CurrentPlayer = p;
-            StartCoroutine(p.PlayRound());
+            p.PlayTurn();
+            yield return new WaitWhile(() => p.IsPlaying);
         }
-
-        CurrentPlayer = dealer;
-        StartCoroutine(dealer.PlayRound());
         
+        // Dealer plays his turn + display result
+        CurrentPlayer = dealer;
+        dealer.PlayTurn();
+        yield return new WaitForSeconds(3.0f);
+        
+        // End the playing
         CurrentPlayer = null;
+        yield return null;
     }
 
     /// <summary>
     /// Distribute wins and take losses
     /// </summary>
-    private void EndTurn()
+    private void EndRound()
     {
         int dealersHand = dealer.GetHandValue();
-        if (dealersHand > 21)
+        if (dealersHand > BLACKJACK)
         {
             EndRoundDealerBusted();
         }
@@ -184,14 +202,17 @@ public class BlackjackGame : MonoBehaviour, Observable
             if (playersHand > BLACKJACK || playersHand < dealersHand)
             {
                 p.ResetCurrentBet();
+                Debug.Log("Player loses");
             }
             else if (playersHand == dealersHand)
             {
                 p.GetBackCurrentBet();
+                Debug.Log("Tie");
             }
             else
             {
                 p.WinRound();
+                Debug.Log("Player wins");
             }
         }
     }
@@ -206,10 +227,12 @@ public class BlackjackGame : MonoBehaviour, Observable
             if (p.GetHandValue() <= BLACKJACK)
             {
                 p.WinRound();
+                Debug.Log("Player wins!");
             }
             else
             {
                 p.ResetCurrentBet();
+                Debug.Log("Player loses");
             }
         }
     }
