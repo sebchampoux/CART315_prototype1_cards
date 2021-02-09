@@ -287,8 +287,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 812967509}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Stay
+        m_TargetAssemblyTypeName: AbstractPlayer, Assembly-CSharp
+        m_MethodName: EndTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

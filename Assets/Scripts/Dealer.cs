@@ -9,14 +9,15 @@ public class Dealer : AbstractPlayer
     /// </summary>
     public int stopAt = 17;
 
-    public override void PlayRound()
+    public override IEnumerator PlayRound()
     {
         cardHand.FlipAllCards(); // Open hidden card
         while(cardHand.GetHandValue() < stopAt)
         {
-            game.PlayerDrawsCard(this);
+            EndTurn();
         }
-        game.EndPlayerTurn(this);
+        EndTurn();
+        yield return null;
     }
 
     /// <summary>

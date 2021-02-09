@@ -42,10 +42,11 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
         game.PlayerDrawsCard(this);
         if (cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
         {
-            game.EndPlayerTurn(this);
+            EndTurn();
         }
         NotifyObservers();
     }
+
     public void NotifyObservers()
     {
         foreach (GameObject g in observers)
@@ -60,5 +61,10 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     /// <summary>
     /// Plays the player's round
     /// </summary>
-    public abstract void PlayRound();
+    public abstract IEnumerator PlayRound();
+
+    public void EndTurn()
+    {
+        StopCoroutine(PlayRound());
+    }
 }

@@ -34,15 +34,6 @@ public class BlackjackGame : MonoBehaviour, Observable
         player.AddCardToHand(newCard);
     }
 
-    /// <summary>
-    /// Ends player's turn
-    /// </summary>
-    /// <param name="player">Player that ends its turn</param>
-    public void EndPlayerTurn(AbstractPlayer player)
-    {
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -51,14 +42,12 @@ public class BlackjackGame : MonoBehaviour, Observable
             cardDeck.ResetDeck();
             DistributeCards();
             TakeInitialBets();
-            // Temporaire
-            break;
-
-            //if (Naturals())
-            //{
-            //    continue;
-            //}
-            //PlayersPlayTurns();
+            if (Naturals())
+            {
+                continue;
+            }
+            PlayersPlayTurns();
+            Debug.Log("After player played their turn");
             //EndTurn();
 
             // Un seul tour pour le moment
@@ -158,10 +147,12 @@ public class BlackjackGame : MonoBehaviour, Observable
         foreach (Player p in players)
         {
             CurrentPlayer = p;
-            p.PlayRound();
+            StartCoroutine(p.PlayRound());
         }
+
         CurrentPlayer = dealer;
-        dealer.PlayRound();
+        StartCoroutine(dealer.PlayRound());
+        
         CurrentPlayer = null;
     }
 

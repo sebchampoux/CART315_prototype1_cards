@@ -77,24 +77,16 @@ public class Player : AbstractPlayer
         _currentBet = 0.0f;
     }
 
-    /// <summary>
-    /// End the player's turn
-    /// </summary>
-    public void Stay()
+    public override IEnumerator PlayRound()
     {
-        game.EndPlayerTurn(this);
-    }
-
-    public override void PlayRound()
-    {
-        Bet();
-        // Coroutine for interacting with the game or wtv
+        Debug.Log("Wait for player play");
+        yield return null; // Coroutine will be stopped by EndTurn
     }
 
     public void DoubleDown()
     {
         Bet();
         DrawCard();
-        game.EndPlayerTurn(this);
+        EndTurn();
     }
 }
