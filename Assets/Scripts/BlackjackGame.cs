@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlackjackGame : MonoBehaviour, Observable
+public class BlackjackGame : MonoBehaviour
 {
     public static readonly int BLACKJACK = 21;
 
-    public GameObject[] observers;
     public CardDeck cardDeck;
     public Player[] players;
     public Dealer dealer;
     public bool gameIsRunning = true;
     private AbstractPlayer _currentPlayer = null;
+
+    public event EventHandler GameUpdate;
 
     public AbstractPlayer CurrentPlayer
     {
@@ -245,13 +246,6 @@ public class BlackjackGame : MonoBehaviour, Observable
 
     public void NotifyObservers()
     {
-        foreach (GameObject g in observers)
-        {
-            Observer observer = g.GetComponent<Observer>();
-            if (observer != null)
-            {
-                observer.UpdateObserver();
-            }
-        }
+        GameUpdate?.Invoke(this, EventArgs.Empty);
     }
 }

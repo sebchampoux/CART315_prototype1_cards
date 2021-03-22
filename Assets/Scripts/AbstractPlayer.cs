@@ -1,13 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractPlayer : MonoBehaviour, Observable
+public abstract class AbstractPlayer : MonoBehaviour
 {
-    [SerializeField] protected GameObject[] observers;
     [SerializeField] protected BlackjackGame game;
     [SerializeField] protected CardHand cardHand;
     protected bool _isPlaying = false;
+
+    public event EventHandler StatusChange;
 
     public bool IsPlaying
     {
@@ -60,15 +62,9 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
         NotifyObservers();
     }
 
-    public void NotifyObservers()
+    protected void NotifyObservers()
     {
-        foreach (GameObject g in observers)
-        {
-            if (g.GetComponent<Observer>() != null)
-            {
-                g.GetComponent<Observer>().UpdateObserver();
-            }
-        }
+        StatusChange?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
