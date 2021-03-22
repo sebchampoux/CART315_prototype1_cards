@@ -4,46 +4,43 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
-    private IList<GameObject> cards = new List<GameObject>();
-    public Vector3 cardOffset = new Vector3(0.5f, 0, -5.0f);
+    private IList<Card> _cards = new List<Card>();
+    public Vector3 _cardsPositionOffset = new Vector3(0.5f, 0, -5.0f);
 
-    public void AddCard(GameObject card)
+    public void AddCard(Card card)
     {
-        if (card.GetComponent<Card>() != null)
-        {
-            RegisterCardInHand(card);
-            PositionNewCard(card);
-        }
+        RegisterCardInHand(card);
+        PositionNewCard(card.gameObject);
     }
 
-    private void RegisterCardInHand(GameObject card)
+    private void RegisterCardInHand(Card card)
     {
-        cards.Add(card);
-        card.GetComponent<Card>().hand = this;
+        _cards.Add(card);
+        card.Hand = this;
     }
 
-    private void PositionNewCard(GameObject card)
+    private void PositionNewCard(GameObject cardGameObject)
     {
-        card.transform.parent = transform;
-        int cardIndex = cards.Count - 1;
-        card.transform.position = transform.position + (cardOffset * cardIndex);
+        cardGameObject.transform.parent = transform;
+        int cardIndex = _cards.Count - 1;
+        cardGameObject.transform.position = transform.position + (_cardsPositionOffset * cardIndex);
     }
 
     public void ClearHand()
     {
-        foreach (GameObject c in cards)
+        foreach (Card c in _cards)
         {
             Destroy(c);
         }
-        cards.Clear();
+        _cards.Clear();
     }
 
     public int GetHandValue()
     {
         int sum = 0;
-        foreach (GameObject c in cards)
+        foreach (Card c in _cards)
         {
-            sum += c.GetComponent<Card>().GetValue();
+            sum += c.GetValue();
         }
         return sum;
     }
@@ -53,20 +50,20 @@ public class CardHand : MonoBehaviour
     /// </summary>
     public void FlipAllCards()
     {
-        foreach (GameObject c in cards)
+        foreach (Card c in _cards)
         {
-            c.GetComponent<Card>().FlipCard();
+            c.FlipCard();
         }
     }
 
     /// <returns>Whether the hand contains only two cards</returns>
     public bool HandHasTwoCards()
     {
-        return cards.Count == 2;
+        return _cards.Count == 2;
     }
 
     public Card GetFirstCard()
     {
-        return cards[0].GetComponent<Card>();
+        return _cards[0];
     }
 }

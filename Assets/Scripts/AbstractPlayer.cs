@@ -5,8 +5,8 @@ using UnityEngine;
 
 public abstract class AbstractPlayer : MonoBehaviour
 {
-    [SerializeField] protected BlackjackGame game;
-    [SerializeField] protected CardHand cardHand;
+    [SerializeField] protected BlackjackGame _game;
+    [SerializeField] protected CardHand _cardHand;
     protected bool _isPlaying = false;
 
     public event EventHandler StatusChange;
@@ -29,7 +29,7 @@ public abstract class AbstractPlayer : MonoBehaviour
     /// </summary>
     public virtual void ClearRound()
     {
-        cardHand.ClearHand();
+        _cardHand.ClearHand();
         NotifyObservers();
     }
 
@@ -37,9 +37,9 @@ public abstract class AbstractPlayer : MonoBehaviour
     /// Add a card to player's hand
     /// </summary>
     /// <param name="card">Card gameobject</param>
-    public virtual void AddCardToHand(GameObject card)
+    public virtual void AddCardToHand(Card card)
     {
-        cardHand.AddCard(card);
+        _cardHand.AddCard(card);
         NotifyObservers();
     }
 
@@ -49,13 +49,13 @@ public abstract class AbstractPlayer : MonoBehaviour
     /// <returns>hand's value</returns>
     public int GetHandValue()
     {
-        return cardHand.GetHandValue();
+        return _cardHand.GetHandValue();
     }
 
     public void DrawCard()
     {
-        game.PlayerDrawsCard(this);
-        if (cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
+        _game.PlayerDrawsCard(this);
+        if (_cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
         {
             EndTurn();
         }
@@ -67,9 +67,6 @@ public abstract class AbstractPlayer : MonoBehaviour
         StatusChange?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>
-    /// Starts the player's turn
-    /// </summary>
     public virtual void PlayTurn()
     {
         IsPlaying = true;

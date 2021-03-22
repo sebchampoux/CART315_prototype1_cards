@@ -5,34 +5,30 @@ using UnityEngine;
 public class Card : MonoBehaviour
 {
     [SerializeField] private int cardValue = 0;
-    public CardHand hand { get; set; } = null;
-    private bool cardIsVisible = false;
+    private bool _cardIsVisible = false;
+    public CardHand Hand { get; set; } = null;
 
     public void Start()
     {
-        if (cardIsVisible)
+        if (_cardIsVisible)
         {
             FlipCard();
         }
     }
 
-    /// <summary>
-    /// Value of the card
-    /// </summary>
-    /// <returns>Value of the card</returns>
     public virtual int GetValue()
     {
         return cardValue;
     }
 
     /// <summary>
-    /// Flip the card from back -> front side
+    /// Flip the card from closed -> open side
     /// </summary>
     public void FlipCard()
     {
-        if (!cardIsVisible)
+        if (!_cardIsVisible)
         {
-            cardIsVisible = true;
+            _cardIsVisible = true;
             transform.Rotate(0, 180, 0);
         }
     }

@@ -12,11 +12,11 @@ public class Dealer : AbstractPlayer
     public override void PlayTurn()
     {
         base.PlayTurn();
-        cardHand.FlipAllCards(); // Open hidden card
-        while(cardHand.GetHandValue() < stopAt)
+        _cardHand.FlipAllCards(); // Open hidden card
+        while(_cardHand.GetHandValue() < stopAt)
         {
             DrawCard();
-            cardHand.FlipAllCards();
+            _cardHand.FlipAllCards();
         }
         EndTurn();
     }
@@ -29,11 +29,11 @@ public class Dealer : AbstractPlayer
     /// <returns>Does the dealer has a natural?</returns>
     public bool HasNatural()
     {
-        Card firstCard = cardHand.GetFirstCard();
+        Card firstCard = _cardHand.GetFirstCard();
         if (firstCard.GetValue() == 10 || firstCard.GetType() == typeof(AceCard))
         {
-            cardHand.FlipAllCards();
-            return cardHand.GetHandValue() == BlackjackGame.BLACKJACK;
+            _cardHand.FlipAllCards();
+            return _cardHand.GetHandValue() == BlackjackGame.BLACKJACK;
         }
         return false;
     }

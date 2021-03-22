@@ -7,6 +7,6 @@ public class AceCard : Card
     public override int GetValue()
     {
         // Not a very sophisticated implementation but will do for now
-        return hand.HandHasTwoCards() ? 11 : 1;
+        return Hand.HandHasTwoCards() ? 11 : 1;
     }
 }

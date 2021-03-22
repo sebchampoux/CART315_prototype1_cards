@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : AbstractPlayer
 {
+    private PlayerCash _playerCash;
+
     private float _cash = 500;
     private float _betAmount = 50;
     private float _currentBet = 0;
@@ -37,6 +39,11 @@ public class Player : AbstractPlayer
         }
     }
 
+    private void Awake()
+    {
+        _playerCash = GetComponent<PlayerCash>();
+    }
+
     public override void ClearRound()
     {
         base.ClearRound();
@@ -57,8 +64,7 @@ public class Player : AbstractPlayer
     /// <param name="winRatio">How much was won (does NOT include the player's bet)</param>
     public void WinRound(float winRatio = 1.0f)
     {
-        _cash += _currentBet * Mathf.Abs(winRatio);
-        GetBackCurrentBet();
+        WinRound(winRatio);
     }
 
     /// <summary>
@@ -66,14 +72,14 @@ public class Player : AbstractPlayer
     /// </summary>
     public void Bet()
     {
-        float bet = Mathf.Min(_cash, _betAmount);
-        _cash -= bet;
+        float bet = Mathf.Min(Cash, _betAmount);
+        Cash -= bet;
         _currentBet += bet;
     }
 
     public void GetBackCurrentBet()
     {
-        _cash += _currentBet;
+        Cash += _currentBet;
         _currentBet = 0.0f;
     }
 
@@ -88,9 +94,9 @@ public class Player : AbstractPlayer
     /// For the player, the card is always open
     /// </summary>
     /// <param name="card"></param>
-    public override void AddCardToHand(GameObject card)
+    public override void AddCardToHand(Card card)
     {
         base.AddCardToHand(card);
-        card.GetComponent<Card>().FlipCard();
+        card.FlipCard();
     }
 }
