@@ -8,14 +8,14 @@ public class BlackjackGame : MonoBehaviour
     public static readonly int BLACKJACK = 21;
 
     [SerializeField] private CardDeck _cardDeck;
-    [SerializeField] private Player[] _players;
-    [SerializeField] private Dealer _dealer;
+    [SerializeField] private PlayerActions[] _players;
+    [SerializeField] private DealerActions _dealer;
     [SerializeField] private bool _gameIsRunning = true;
-    private AbstractPlayer _currentPlayer = null;
+    private AbstractPlayerActions _currentPlayer = null;
 
     public event EventHandler GameUpdate;
 
-    public AbstractPlayer CurrentPlayer
+    public AbstractPlayerActions CurrentPlayer
     {
         get { return _currentPlayer; }
         private set
@@ -55,7 +55,7 @@ public class BlackjackGame : MonoBehaviour
         throw new Exception("Not implemented");
     }
 
-    internal void PlayerDrawsCard(AbstractPlayer abstractPlayer)
+    internal void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)
     {
         Card newCard = _cardDeck.DrawCard();
         abstractPlayer.AddCardToHand(newCard);
@@ -69,7 +69,7 @@ public class BlackjackGame : MonoBehaviour
         for (int i = 0; i < 2; i++)
         {
             Card card;
-            foreach (Player p in _players)
+            foreach (PlayerActions p in _players)
             {
                 card = _cardDeck.DrawCard();
                 p.AddCardToHand(card);

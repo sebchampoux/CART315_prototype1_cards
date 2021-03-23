@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class PlayerActionButton : MonoBehaviour
 {
-    public AbstractPlayer player;
+    public AbstractPlayerActions player;
 
     public void Start()
     {
-        player.StatusChange += ToggleButtonActivation;
+        player.TurnStatusChange += ToggleButtonActivation;
         ToggleButtonActivation(player, EventArgs.Empty);
     }
 

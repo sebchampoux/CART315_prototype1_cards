@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dealer : AbstractPlayer
+public class DealerActions : AbstractPlayerActions
 {
     /// <summary>
     /// Point at which the dealer the dealer should stop drawing

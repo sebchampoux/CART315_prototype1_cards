@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractPlayer : MonoBehaviour
+public abstract class AbstractPlayerActions : MonoBehaviour
 {
     [SerializeField] protected BlackjackGame _game;
     [SerializeField] protected CardHand _cardHand;
     protected bool _isPlaying = false;
 
-    public event EventHandler StatusChange;
+    public event EventHandler TurnStatusChange;
 
     public bool IsPlaying
     {
@@ -62,11 +62,6 @@ public abstract class AbstractPlayer : MonoBehaviour
         NotifyObservers();
     }
 
-    protected void NotifyObservers()
-    {
-        StatusChange?.Invoke(this, EventArgs.Empty);
-    }
-
     public virtual void PlayTurn()
     {
         IsPlaying = true;
@@ -75,5 +70,10 @@ public abstract class AbstractPlayer : MonoBehaviour
     public void EndTurn()
     {
         IsPlaying = false;
+    }
+
+    protected void NotifyObservers()
+    {
+        TurnStatusChange?.Invoke(this, EventArgs.Empty);
     }
 }
