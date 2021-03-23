@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
-    private IList<Card> _cards = new List<Card>();
+    private readonly IList<Card> _cards = new List<Card>();
     public Vector3 _cardsPositionOffset = new Vector3(0.5f, 0, -5.0f);
 
     public void AddCard(Card card)
@@ -38,11 +38,63 @@ public class CardHand : MonoBehaviour
     public int GetHandValue()
     {
         int sum = 0;
+        sum += SumOfRegularCards();
+        sum += SumOfAces(sum);
+        return sum;
+    }
+
+    private int SumOfRegularCards()
+    {
+        int sum = 0;
         foreach (Card c in _cards)
         {
-            sum += c.GetValue();
+            if (c.GetType() == typeof(AceCard))
+            {
+                continue;
+            }
+            else
+            {
+                sum += c.GetValue();
+            }
         }
         return sum;
+    }
+
+    private int SumOfAces(int sumWithoutAces)
+    {
+        int sumOfAces = 0;
+        int numberOfAcesInHand = NumberOfAcesInHand();
+        for (int i = 0; i < numberOfAcesInHand; i++)
+        {
+            if (i == 0 && !WouldBustWithAn11(sumWithoutAces, numberOfAcesInHand))
+            {
+                sumOfAces += 11;
+            }
+            else
+            {
+                sumOfAces += 1;
+            }
+        }
+        return sumOfAces;
+    }
+
+    /// <returns>Would counting one ace as 11, and the others as 1, go over 21?</returns>
+    private static bool WouldBustWithAn11(int sumWithoutAces, int numberOfAcesInHand)
+    {
+        return sumWithoutAces + 11 + (numberOfAcesInHand - 1) > BlackjackGame.BLACKJACK;
+    }
+
+    private int NumberOfAcesInHand()
+    {
+        int numberOfAces = 0;
+        foreach (Card c in _cards)
+        {
+            if (c.GetType() == typeof(AceCard))
+            {
+                numberOfAces++;
+            }
+        }
+        return numberOfAces;
     }
 
     /// <summary>
@@ -54,12 +106,6 @@ public class CardHand : MonoBehaviour
         {
             c.FlipCard();
         }
-    }
-
-    /// <returns>Whether the hand contains only two cards</returns>
-    public bool HandHasTwoCards()
-    {
-        return _cards.Count == 2;
     }
 
     public Card GetFirstCard()
