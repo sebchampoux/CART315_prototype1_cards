@@ -9,14 +9,8 @@ public class CardHand : MonoBehaviour
 
     public void AddCard(Card card)
     {
-        RegisterCardInHand(card);
-        PositionNewCard(card.gameObject);
-    }
-
-    private void RegisterCardInHand(Card card)
-    {
         _cards.Add(card);
-        card.Hand = this;
+        PositionNewCard(card.gameObject);
     }
 
     private void PositionNewCard(GameObject cardGameObject)

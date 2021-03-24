@@ -6,7 +6,6 @@ public class Card : MonoBehaviour
 {
     [SerializeField] private int cardValue = 0;
     private bool _cardIsVisible = false;
-    public CardHand Hand { get; set; } = null;
 
     public void Start()
     {
