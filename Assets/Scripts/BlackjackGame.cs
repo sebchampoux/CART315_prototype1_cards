@@ -33,16 +33,18 @@ public class BlackjackGame : MonoBehaviour
 
     private void GameLoop()
     {
+        /*
         while (_gameIsRunning)
         {
             ClearRound();
             _cardDeck.ResetDeck();
             DistributeCards();
             TakeInitialBets();
-            // TODO Naturals
+            //TODO Naturals
             PlayersPlayTurns();
             EndRound();
         }
+        */
     }
 
     private void ClearRound()
@@ -55,7 +57,7 @@ public class BlackjackGame : MonoBehaviour
         throw new Exception("Not implemented");
     }
 
-    internal void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)
+    public void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)
     {
         Card newCard = _cardDeck.DrawCard();
         abstractPlayer.AddCardToHand(newCard);
