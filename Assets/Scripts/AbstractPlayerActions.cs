@@ -5,11 +5,17 @@ using UnityEngine;
 
 public abstract class AbstractPlayerActions : MonoBehaviour
 {
+    [SerializeField] protected string _playerName = "Player 1";
     [SerializeField] protected BlackjackGame _game;
     [SerializeField] protected CardHand _cardHand;
     protected bool _isPlaying = false;
 
-    public event EventHandler TurnStatusChange;
+    public event EventHandler OnPlayStatusChange;
+
+    public string PlayerName
+    {
+        get { return _playerName; }
+    }
 
     public bool IsPlaying
     {
@@ -65,7 +71,7 @@ public abstract class AbstractPlayerActions : MonoBehaviour
     public virtual IEnumerator PlayTurn()
     {
         IsPlaying = true;
-        return null;
+        yield return null;
     }
 
     public void EndTurn()
@@ -73,8 +79,13 @@ public abstract class AbstractPlayerActions : MonoBehaviour
         IsPlaying = false;
     }
 
+    public bool HasBlackjack()
+    {
+        return GetHandValue() == BlackjackGame.BLACKJACK;
+    }
+
     protected void NotifyObservers()
     {
-        TurnStatusChange?.Invoke(this, EventArgs.Empty);
+        OnPlayStatusChange?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -22,20 +22,18 @@ public class DealerActions : AbstractPlayerActions
         return null;
     }
 
-    /// <summary>
-    /// Performs the necessary operations for the dealer
-    /// to check if he has a natural.  Returns whether or not
-    /// it is the case.
-    /// </summary>
-    /// <returns>Does the dealer has a natural?</returns>
-    public bool HasNatural()
+    public bool FirstCardAceOrTen()
     {
         Card firstCard = _cardHand.GetFirstCard();
-        if (firstCard.GetValue() == 10 || firstCard.GetType() == typeof(AceCard))
-        {
-            _cardHand.FlipAllCards();
-            return _cardHand.GetHandValue() == BlackjackGame.BLACKJACK;
-        }
-        return false;
+        return firstCard.GetValue() == 10 || firstCard.GetType() == typeof(AceCard);
+    }
+
+    /// <summary>
+    /// Performs the necessary operations for the dealer
+    /// to check if he has a natural.
+    /// </summary>
+    public void OpenAllCards()
+    {
+        _cardHand.FlipAllCards();
     }
 }

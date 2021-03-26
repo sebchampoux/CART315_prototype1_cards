@@ -24,7 +24,7 @@ public class CardHand : MonoBehaviour
     {
         foreach (Card c in _cards)
         {
-            Destroy(c);
+            Destroy(c.gameObject);
         }
         _cards.Clear();
     }

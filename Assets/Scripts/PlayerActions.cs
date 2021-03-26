@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,13 @@ public class PlayerActions : AbstractPlayerActions
         set
         {
             _waitingForInitialBet = value;
+            NotifyObservers();
         }
+    }
+
+    public PlayerCash PlayerCash
+    {
+        get { return _playerCash; }
     }
 
     private void Awake()
@@ -46,6 +53,8 @@ public class PlayerActions : AbstractPlayerActions
     public void DoubleDown()
     {
         _playerCash.Bet();
+        DrawCard();
+        EndTurn();
     }
 
     public IEnumerator MakeInitialBet()

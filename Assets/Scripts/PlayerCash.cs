@@ -10,24 +10,24 @@ public class PlayerCash : MonoBehaviour
     private int _initialBet = 0;
     private int _currentBet = 0;
 
-    public event EventHandler CashChange;
+    public event EventHandler OnCashChange;
     public int CurrentCash
     {
         get { return _currentCash; }
         private set
         {
             _currentCash = value;
-            OnChange();
+            NotifyObservers();
         }
     }
 
     public int InitialBet
     {
         get { return _initialBet; }
-        private set
+        set
         {
             _initialBet = value;
-            OnChange();
+            NotifyObservers();
         }
     }
 
@@ -37,13 +37,13 @@ public class PlayerCash : MonoBehaviour
         private set
         {
             _currentBet = value;
-            OnChange();
+            NotifyObservers();
         }
     }
 
-    protected void OnChange()
+    protected void NotifyObservers()
     {
-        CashChange?.Invoke(this, EventArgs.Empty);
+        OnCashChange?.Invoke(this, EventArgs.Empty);
     }
 
     public void ClearCurrentRound()
@@ -68,10 +68,10 @@ public class PlayerCash : MonoBehaviour
     public void WinRound(float winRatio = 1.0f)
     {
         CurrentCash += (int)((float)CurrentBet * winRatio);
-        ReturnInitialBetToCash();
+        ReturnCurrentBet();
     }
 
-    private void ReturnInitialBetToCash()
+    public void ReturnCurrentBet()
     {
         CurrentCash += CurrentBet;
         CurrentBet = 0;
