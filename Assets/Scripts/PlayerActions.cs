@@ -5,37 +5,14 @@ using UnityEngine;
 public class PlayerActions : AbstractPlayerActions
 {
     private PlayerCash _playerCash;
+    private bool _waitingForInitialBet = false;
 
-    private float _cash = 500;
-    private float _betAmount = 50;
-    private float _currentBet = 0;
-
-    public float Cash
+    public bool WaitingForInitialBet
     {
-        get { return _cash; }
-        private set
+        get { return _waitingForInitialBet; }
+        set
         {
-            _cash = Mathf.Max(value, 0.0f);
-            NotifyObservers();
-        }
-    }
-    public float BetAmount
-    {
-        get { return _betAmount; }
-        private set
-        {
-            _betAmount = Mathf.Max(value, 0.0f);
-            NotifyObservers();
-        }
-    }
-
-    public float CurrentBet
-    {
-        get { return _currentBet; }
-        private set
-        {
-            _currentBet = Mathf.Max(value, 0.0f);
-            NotifyObservers();
+            _waitingForInitialBet = value;
         }
     }
 
@@ -47,6 +24,7 @@ public class PlayerActions : AbstractPlayerActions
     public override void ClearRound()
     {
         base.ClearRound();
+        _playerCash.ClearCurrentRound();
     }
 
     /// <summary>
@@ -57,5 +35,28 @@ public class PlayerActions : AbstractPlayerActions
     {
         base.AddCardToHand(card);
         card.FlipCard();
+    }
+
+    public override IEnumerator PlayTurn()
+    {
+        StartCoroutine(base.PlayTurn());
+        yield return new WaitWhile(() => IsPlaying);
+    }
+
+    public void DoubleDown()
+    {
+        _playerCash.Bet();
+    }
+
+    public IEnumerator MakeInitialBet()
+    {
+        WaitingForInitialBet = true;
+        yield return new WaitWhile(() => WaitingForInitialBet);
+    }
+
+    public void ConfirmInitialBet()
+    {
+        _playerCash.Bet();
+        WaitingForInitialBet = false;
     }
 }

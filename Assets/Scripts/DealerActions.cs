@@ -9,9 +9,9 @@ public class DealerActions : AbstractPlayerActions
     /// </summary>
     public int stopAt = 17;
 
-    public override void PlayTurn()
+    public override IEnumerator PlayTurn()
     {
-        base.PlayTurn();
+        StartCoroutine(base.PlayTurn());
         _cardHand.FlipAllCards(); // Open hidden card
         while(_cardHand.GetHandValue() < stopAt)
         {
@@ -19,6 +19,7 @@ public class DealerActions : AbstractPlayerActions
             _cardHand.FlipAllCards();
         }
         EndTurn();
+        return null;
     }
 
     /// <summary>

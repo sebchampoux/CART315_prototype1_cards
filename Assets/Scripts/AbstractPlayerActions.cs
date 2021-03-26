@@ -62,9 +62,10 @@ public abstract class AbstractPlayerActions : MonoBehaviour
         NotifyObservers();
     }
 
-    public virtual void PlayTurn()
+    public virtual IEnumerator PlayTurn()
     {
         IsPlaying = true;
+        return null;
     }
 
     public void EndTurn()

@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class PlayerCash : MonoBehaviour
 {
-    [SerializeField] private uint _currentCash = 500;
-    [SerializeField] private uint _defaultBet = 50;
-    private uint _currentBet = 0;
+    [SerializeField] private int _currentCash = 500;
+    [SerializeField] private int _defaultInitialBet = 50;
+    private int _initialBet = 0;
+    private int _currentBet = 0;
 
-    public uint CurrentCash
+    public event EventHandler CashChange;
+    public int CurrentCash
     {
         get { return _currentCash; }
         private set
@@ -19,7 +21,17 @@ public class PlayerCash : MonoBehaviour
         }
     }
 
-    public uint CurrentBet
+    public int InitialBet
+    {
+        get { return _initialBet; }
+        private set
+        {
+            _initialBet = value;
+            OnChange();
+        }
+    }
+
+    public int CurrentBet
     {
         get { return _currentBet; }
         private set
@@ -29,11 +41,22 @@ public class PlayerCash : MonoBehaviour
         }
     }
 
-    public event EventHandler CashChange;
-
     protected void OnChange()
     {
         CashChange?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ClearCurrentRound()
+    {
+        InitialBet = _defaultInitialBet;
+        CurrentBet = 0;
+    }
+
+    public void Bet()
+    {
+        int betAmount = Mathf.Min(InitialBet, CurrentCash);
+        CurrentBet = betAmount;
+        CurrentCash -= betAmount;
     }
 
     public void LoseCurrentBet()
@@ -44,7 +67,7 @@ public class PlayerCash : MonoBehaviour
     /// <param name="winRatio">1.0f (default value) = player won his initial bet</param>
     public void WinRound(float winRatio = 1.0f)
     {
-        CurrentCash += (uint)((float)CurrentBet * winRatio);
+        CurrentCash += (int)((float)CurrentBet * winRatio);
         ReturnInitialBetToCash();
     }
 

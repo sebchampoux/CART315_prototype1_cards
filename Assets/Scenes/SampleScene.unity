@@ -426,7 +426,6 @@ GameObject:
   - component: {fileID: 341197150}
   - component: {fileID: 341197149}
   - component: {fileID: 341197148}
-  - component: {fileID: 341197151}
   m_Layer: 5
   m_Name: Stay Button
   m_TagString: Untagged
@@ -473,9 +472,9 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0, b: 0, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -548,19 +547,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341197146}
   m_CullTransparentMesh: 1
---- !u!114 &341197151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 341197146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 812967509}
 --- !u!1 &374570936
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,10 +658,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c233c6be69f7247907eacad9ee0dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardDeck: {fileID: 0}
-  _players: []
-  _dealer: {fileID: 0}
-  _gameIsRunning: 1
+  _cardDeck: {fileID: 418505911}
+  _players:
+  - {fileID: 812967509}
+  _dealer: {fileID: 574508967}
 --- !u!4 &375622230
 Transform:
   m_ObjectHideFlags: 0
@@ -798,58 +784,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardsDeck:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 3322764904388060595, guid: d8da627ce5b5c9d4e9626bb6dbe91130, type: 3}
+  - {fileID: 3559531549293867130, guid: 42425de3ba1ede14db70cd3f9b5ff9ee, type: 3}
+  - {fileID: 2488255985768814760, guid: fde1d82888ecebb41999301e56cb02ae, type: 3}
+  - {fileID: -643004724060438485, guid: 8dc9fcfcf62167d4d877011ded59530e, type: 3}
+  - {fileID: -4684706452647958472, guid: 912bc6eccc5a6a44a92b8ea46d3ea17f, type: 3}
+  - {fileID: 7909734309012765929, guid: dd1e33631f7fb3a49856d11cdca3fb2c, type: 3}
+  - {fileID: -1205828551819453212, guid: 9285c33cb5a501040ae701117b76b31b, type: 3}
+  - {fileID: -6433455865730850934, guid: acfc899a81dedf84e85a3857e0a30418, type: 3}
+  - {fileID: 1269266892168682370, guid: 67f65d80ee3c60343985df9fbf1e8e1c, type: 3}
+  - {fileID: -7528943917908160233, guid: 0831adf2dd057824aac921aa8458f7e0, type: 3}
+  - {fileID: -8509990819799723399, guid: 4f588c34d6ccc99419e866d5d39e83dc, type: 3}
+  - {fileID: -5384876046428769195, guid: 957aef8860dfa2f4dbd221c55d3280b7, type: 3}
+  - {fileID: 986669498736006088, guid: 3b468bb3b418cb0478512ffdc1a43c30, type: 3}
+  - {fileID: 4515808252809498345, guid: b084ad799af45824eafd37ba8888c25b, type: 3}
+  - {fileID: -4982572815324489011, guid: 62054be23e4921e4692d2316be434fa8, type: 3}
+  - {fileID: 7350266892494543262, guid: e52af84064e699f4aa629b819362d104, type: 3}
+  - {fileID: 7951022125420698928, guid: 7fc7bc760426698488f099b5e33c3601, type: 3}
+  - {fileID: 4931205419900494796, guid: e78218834f28aaa4cb0412dbd2ca3885, type: 3}
+  - {fileID: -2718061282451890861, guid: f945b8cbd4d08c94f909f2b958cb0339, type: 3}
+  - {fileID: 2020488414089792664, guid: 3ac264d1a4ee1f4478648549ed9d0fa9, type: 3}
+  - {fileID: 3977725803097729774, guid: 0b6f70910dcd53e46ba3c798ac476b4a, type: 3}
+  - {fileID: -1713476002439667554, guid: 21d99929f1570174e8379a3d27c03798, type: 3}
+  - {fileID: -3982170183384261845, guid: 6bab540b0ab29724191da98c5315ba3e, type: 3}
+  - {fileID: -3915647930886992093, guid: 010dc393ef136d340877859a5a1f5299, type: 3}
+  - {fileID: 818791420111367124, guid: 0c71d53a5716f3a45a2eec532ca69701, type: 3}
+  - {fileID: 81945782414007410, guid: 6fcdb23aae6f919419a620aceb03f71c, type: 3}
+  - {fileID: 2983732532363844635, guid: 6cab7211dc6d32b42b81fb89fda9807c, type: 3}
+  - {fileID: 2946928569416022540, guid: db8871bbc14ad1a468acb8eabf2eff00, type: 3}
+  - {fileID: 1818419895175881778, guid: 2622b6bbe79ecfb41a7079da235b20ee, type: 3}
+  - {fileID: -4318889479184588963, guid: 69e8a6942264b1c4891c60509ad0227e, type: 3}
+  - {fileID: -7604235866760788856, guid: 3cbe1accaa0090f4bb131e56f9f1bc65, type: 3}
+  - {fileID: -4277932668670713474, guid: ba73849b5b2cc3e46845169888723b12, type: 3}
+  - {fileID: -5733673060624352496, guid: ef9b926b6abfbb54bb62ea65e9fbff6c, type: 3}
+  - {fileID: 3916757184156657919, guid: 070ce43fda89c044a951e7c824f2a4b0, type: 3}
+  - {fileID: 6154046472407264284, guid: c350a7f4fbb56804d81398a3041ae39e, type: 3}
+  - {fileID: 5800963781942160641, guid: 7e4b245020c7fbe4ea0424d30c7a507f, type: 3}
+  - {fileID: 9179043300824043650, guid: 8153f339217d9144f8336c389640b5db, type: 3}
+  - {fileID: -7257555103006010881, guid: 1590f9e09fb11884dafe3692a886e01d, type: 3}
+  - {fileID: 3799609918141585433, guid: 96b9e472cd3b76841b08d16a5be3fa32, type: 3}
+  - {fileID: 8062098975573803538, guid: f8573787955db2e4d859aea5ce3199d5, type: 3}
+  - {fileID: 6865299667028865503, guid: 1a7c8e653b7e9ac44946f0a7a5931693, type: 3}
+  - {fileID: 7653626064399254411, guid: dead6f1af7240054286fff07b9c2b9d7, type: 3}
+  - {fileID: -9154780766102452262, guid: 0e029bfd8e975594695405ecf16070f4, type: 3}
+  - {fileID: 1065351332880833081, guid: 5d82df18c146fdc46adfb11f8afb9a4c, type: 3}
+  - {fileID: -8654114918997485992, guid: c9958dad4f2a3554d8d0a6f6c6e356c5, type: 3}
+  - {fileID: -6407603937585984176, guid: 74626a201a19e0d40bcfee14836e3e9b, type: 3}
+  - {fileID: 3960836809826426314, guid: 5c0c5e7311c0636468ad71b4440997a2, type: 3}
+  - {fileID: 7158340928185012325, guid: 4f9ef998a947cc5408752033b9bd8e07, type: 3}
+  - {fileID: 641153827291359263, guid: 00725cf4f46e0f548866f82bad6be84b, type: 3}
+  - {fileID: 1356601504926172495, guid: 6f716590989314948af7552f8229e93d, type: 3}
+  - {fileID: 7728478291505970107, guid: e636871f8401ef34688591d3e9f834c5, type: 3}
+  - {fileID: 6709087274801924555, guid: 406e66099621b1246a51779ecd4dbf39, type: 3}
 --- !u!4 &418505912
 Transform:
   m_ObjectHideFlags: 0
@@ -946,7 +932,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 437990482}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 812967509}
+        m_TargetAssemblyTypeName: PlayerActions, Blackjack
+        m_MethodName: ConfirmInitialBet
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &437990482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,7 +1020,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -157.24, y: 90.5}
+  m_AnchoredPosition: {x: -157.25, y: 77.517}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &475212182
@@ -1262,7 +1260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentCash: 500
-  _defaultBet: 50
+  _defaultInitialBet: 50
 --- !u!1 &836358330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,7 +1400,6 @@ GameObject:
   - component: {fileID: 1105965957}
   - component: {fileID: 1105965956}
   - component: {fileID: 1105965955}
-  - component: {fileID: 1105965958}
   m_Layer: 5
   m_Name: Hit Button
   m_TagString: Untagged
@@ -1449,7 +1446,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1524,19 +1521,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105965953}
   m_CullTransparentMesh: 1
---- !u!114 &1105965958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105965953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 812967509}
 --- !u!1 &1156770429
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,11 +1978,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: e021cd574d41d8241a0ebaaaebbf1c3e, type: 3}
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2006,7 +1990,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Make initial bet
+  m_Text: Confirm initial bet
 --- !u!222 &1564159140
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2340,7 +2324,6 @@ GameObject:
   - component: {fileID: 2131864476}
   - component: {fileID: 2131864475}
   - component: {fileID: 2131864474}
-  - component: {fileID: 2131864477}
   m_Layer: 5
   m_Name: Dbl down Button
   m_TagString: Untagged
@@ -2462,16 +2445,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131864472}
   m_CullTransparentMesh: 1
---- !u!114 &2131864477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2131864472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fc6264411dd29d42bf907ec266a0055, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 812967509}

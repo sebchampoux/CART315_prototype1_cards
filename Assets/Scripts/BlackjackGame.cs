@@ -10,10 +10,8 @@ public class BlackjackGame : MonoBehaviour
     [SerializeField] private CardDeck _cardDeck;
     [SerializeField] private PlayerActions[] _players;
     [SerializeField] private DealerActions _dealer;
-    [SerializeField] private bool _gameIsRunning = true;
     private AbstractPlayerActions _currentPlayer = null;
-
-    public event EventHandler GameUpdate;
+    private bool _gameIsRunning = true;
 
     public AbstractPlayerActions CurrentPlayer
     {
@@ -21,7 +19,6 @@ public class BlackjackGame : MonoBehaviour
         private set
         {
             _currentPlayer = value;
-            NotifyObservers();
         }
     }
 
@@ -33,28 +30,33 @@ public class BlackjackGame : MonoBehaviour
 
     private void GameLoop()
     {
-        /*
-        while (_gameIsRunning)
-        {
+        //while (_gameIsRunning)
+        //{
             ClearRound();
             _cardDeck.ResetDeck();
+            MakeInitialBets();
             DistributeCards();
-            TakeInitialBets();
             //TODO Naturals
             PlayersPlayTurns();
             EndRound();
-        }
-        */
+        //}
     }
 
     private void ClearRound()
     {
-        throw new Exception("Not implemented");
+        foreach(PlayerActions p in _players)
+        {
+            p.ClearRound();
+        }
+        _dealer.ClearRound();
     }
 
-    private void TakeInitialBets()
+    private void MakeInitialBets()
     {
-        throw new Exception("Not implemented");
+        foreach(PlayerActions p in _players)
+        {
+            StartCoroutine(p.MakeInitialBet());
+        }
     }
 
     public void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)
@@ -91,7 +93,13 @@ public class BlackjackGame : MonoBehaviour
     /// </summary>
     private void PlayersPlayTurns()
     {
-
+        foreach(PlayerActions currentPlayer in _players)
+        {
+            CurrentPlayer = currentPlayer;
+            StartCoroutine(currentPlayer.PlayTurn());
+        }
+        CurrentPlayer = _dealer;
+        _dealer.PlayTurn();
     }
 
     /// <summary>
@@ -99,17 +107,12 @@ public class BlackjackGame : MonoBehaviour
     /// </summary>
     private void EndRound()
     {
-
+        Debug.Log("End round");
     }
 
     public void EndGame()
     {
         _gameIsRunning = false;
         Application.Quit();
-    }
-
-    public void NotifyObservers()
-    {
-        GameUpdate?.Invoke(this, EventArgs.Empty);
     }
 }
