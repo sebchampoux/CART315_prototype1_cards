@@ -4,48 +4,91 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
-    private IList<GameObject> cards = new List<GameObject>();
-    public Vector3 cardOffset = new Vector3(0.5f, 0, -5.0f);
+    private readonly IList<Card> _cards = new List<Card>();
+    public Vector3 _cardsPositionOffset = new Vector3(0.5f, 0, -5.0f);
 
-    public void AddCard(GameObject card)
+    public void AddCard(Card card)
     {
-        if (card.GetComponent<Card>() != null)
-        {
-            RegisterCardInHand(card);
-            PositionNewCard(card);
-        }
+        _cards.Add(card);
+        PositionNewCard(card.gameObject);
     }
 
-    private void RegisterCardInHand(GameObject card)
+    private void PositionNewCard(GameObject cardGameObject)
     {
-        cards.Add(card);
-        card.GetComponent<Card>().hand = this;
-    }
-
-    private void PositionNewCard(GameObject card)
-    {
-        card.transform.parent = transform;
-        int cardIndex = cards.Count - 1;
-        card.transform.position = transform.position + (cardOffset * cardIndex);
+        cardGameObject.transform.parent = transform;
+        int cardIndex = _cards.Count - 1;
+        cardGameObject.transform.position = transform.position + (_cardsPositionOffset * cardIndex);
     }
 
     public void ClearHand()
     {
-        foreach (GameObject c in cards)
+        foreach (Card c in _cards)
         {
-            Destroy(c);
+            Destroy(c.gameObject);
         }
-        cards.Clear();
+        _cards.Clear();
     }
 
     public int GetHandValue()
     {
         int sum = 0;
-        foreach (GameObject c in cards)
+        sum += SumOfRegularCards();
+        sum += SumOfAces(sum);
+        return sum;
+    }
+
+    private int SumOfRegularCards()
+    {
+        int sum = 0;
+        foreach (Card c in _cards)
         {
-            sum += c.GetComponent<Card>().GetValue();
+            if (c.GetType() == typeof(AceCard))
+            {
+                continue;
+            }
+            else
+            {
+                sum += c.GetValue();
+            }
         }
         return sum;
+    }
+
+    private int SumOfAces(int sumWithoutAces)
+    {
+        int sumOfAces = 0;
+        int numberOfAcesInHand = NumberOfAcesInHand();
+        for (int i = 0; i < numberOfAcesInHand; i++)
+        {
+            if (i == 0 && !WouldBustWithAn11(sumWithoutAces, numberOfAcesInHand))
+            {
+                sumOfAces += 11;
+            }
+            else
+            {
+                sumOfAces += 1;
+            }
+        }
+        return sumOfAces;
+    }
+
+    /// <returns>Would counting one ace as 11, and the others as 1, go over 21?</returns>
+    private static bool WouldBustWithAn11(int sumWithoutAces, int numberOfAcesInHand)
+    {
+        return sumWithoutAces + 11 + (numberOfAcesInHand - 1) > BlackjackGame.BLACKJACK;
+    }
+
+    private int NumberOfAcesInHand()
+    {
+        int numberOfAces = 0;
+        foreach (Card c in _cards)
+        {
+            if (c.GetType() == typeof(AceCard))
+            {
+                numberOfAces++;
+            }
+        }
+        return numberOfAces;
     }
 
     /// <summary>
@@ -53,20 +96,14 @@ public class CardHand : MonoBehaviour
     /// </summary>
     public void FlipAllCards()
     {
-        foreach (GameObject c in cards)
+        foreach (Card c in _cards)
         {
-            c.GetComponent<Card>().FlipCard();
+            c.FlipCard();
         }
-    }
-
-    /// <returns>Whether the hand contains only two cards</returns>
-    public bool HandHasTwoCards()
-    {
-        return cards.Count == 2;
     }
 
     public Card GetFirstCard()
     {
-        return cards[0].GetComponent<Card>();
+        return _cards[0];
     }
 }

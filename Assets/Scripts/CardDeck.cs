@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardDeck : MonoBehaviour
 {
-    public GameObject[] cardsDeck;
+    public Card[] cardsDeck;
     private int currentCard = -1;
 
     public void Start()
@@ -29,7 +29,7 @@ public class CardDeck : MonoBehaviour
         for (int i = cardsDeck.Length - 1; i > 1; i--)
         {
             int k = Random.Range(0, cardsDeck.Length - 1);
-            GameObject toSwap = cardsDeck[k];
+            Card toSwap = cardsDeck[k];
             cardsDeck[k] = cardsDeck[i];
             cardsDeck[i] = toSwap;
         }
@@ -39,7 +39,7 @@ public class CardDeck : MonoBehaviour
     /// Moves the pointer, draws and returns a copy of the current card
     /// </summary>
     /// <returns>Card prefab</returns>
-    public GameObject DrawCard()
+    public Card DrawCard()
     {
         currentCard++;
         return Instantiate(cardsDeck[currentCard]);

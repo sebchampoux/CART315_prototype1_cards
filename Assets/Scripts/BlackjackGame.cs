@@ -2,36 +2,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class BlackjackGame : MonoBehaviour, Observable
+public class BlackjackGame : MonoBehaviour
 {
-    public static readonly int BLACKJACK = 21;
+    public const int CARDS_ON_INITIAL_DISTRIBUTION = 2;
+    public const int BLACKJACK = 21;
+    public const float RETROACTION_WAIT_TIME = 4.0f;
+    [SerializeField] private CardDeck _cardDeck;
+    [SerializeField] private PlayerActions[] _players;
+    [SerializeField] private DealerActions _dealer;
+    [SerializeField] private string _sceneToLoadOnEndGame;
+    private AbstractPlayerActions _currentPlayer = null;
+    private bool _gameIsRunning = true;
+    private bool _naturals = false;
 
-    public GameObject[] observers;
-    public CardDeck cardDeck;
-    public Player[] players;
-    public Dealer dealer;
-    public bool gameIsRunning = true;
-    private AbstractPlayer _currentPlayer = null;
+    public delegate void TurnInfoDelegate(string message);
+    public event TurnInfoDelegate TurnInfoEvent;
 
-    public AbstractPlayer CurrentPlayer
+    public AbstractPlayerActions CurrentPlayer
     {
         get { return _currentPlayer; }
         private set
         {
             _currentPlayer = value;
-            NotifyObservers();
         }
-    }
-
-    /// <summary>
-    /// Draws a card and adds it to player's hand
-    /// </summary>
-    /// <param name="player">Player that draws</param>
-    public void PlayerDrawsCard(AbstractPlayer player)
-    {
-        GameObject newCard = cardDeck.DrawCard();
-        player.AddCardToHand(newCard);
     }
 
     // Start is called before the first frame update
@@ -42,113 +37,103 @@ public class BlackjackGame : MonoBehaviour, Observable
 
     private IEnumerator GameLoop()
     {
-        while (gameIsRunning)
+        while (_gameIsRunning)
         {
             ClearRound();
-            cardDeck.ResetDeck();
-            DistributeCards();
-            TakeInitialBets();
-            if (Naturals())
-            {
-                continue;
-            }
+            _cardDeck.ResetDeck();
+            yield return MakeInitialBets();
+            yield return DistributeCards();
+            yield return CheckForNaturals();
+            if (_naturals) continue;
             yield return PlayersPlayTurns();
-            EndRound();
+            yield return EndRound();
+            if (PlayersOutOfMoney())
+            {
+                yield return EndGame();
+            }
         }
-        yield return null;
     }
 
     private void ClearRound()
     {
-        foreach (Player p in players)
+        foreach (PlayerActions p in _players)
         {
-            p.ResetCurrentBet();
             p.ClearRound();
         }
-        dealer.ClearRound();
+        _dealer.ClearRound();
+        _naturals = false;
     }
 
-    private void TakeInitialBets()
+    private IEnumerator MakeInitialBets()
     {
-        foreach (Player p in players)
+        foreach (PlayerActions p in _players)
         {
-            p.Bet();
+            yield return p.MakeInitialBet();
         }
     }
 
     /// <summary>
     /// Distribute an initial two cards to every player and the dealer
     /// </summary>
-    private void DistributeCards()
+    private IEnumerator DistributeCards()
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < CARDS_ON_INITIAL_DISTRIBUTION; i++)
         {
-            // Draw a card for each player
-            GameObject card;
-            foreach (Player p in players)
+            Card card;
+            foreach (PlayerActions p in _players)
             {
-                card = cardDeck.DrawCard();
+                card = _cardDeck.DrawCard();
                 p.AddCardToHand(card);
+                yield return new WaitForSeconds(0.5f);
             }
 
-            // Draw a card for the dealer
-            // Only make first card visible
-            card = cardDeck.DrawCard();
+            card = _cardDeck.DrawCard();
             if (i == 0)
             {
-                card.GetComponent<Card>().FlipCard();
+                card.FlipCard();
             }
-            dealer.AddCardToHand(card);
+            _dealer.AddCardToHand(card);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
-    /// <summary>
-    /// Checks if a player has a blackjack in his two initial cards.  If yes,
-    /// take appropriate action
-    /// </summary>
-    /// <returns>Whether some naturals are found</returns>
-    private bool Naturals()
+    private IEnumerator CheckForNaturals()
     {
-        // Filter players according to who has a natural and who doesn't
-        IList<Player> playersWithNaturals = new List<Player>();
-        IList<Player> playersWithoutNaturals = new List<Player>();
-        foreach (Player p in players)
+        foreach (PlayerActions player in _players)
         {
-            if (p.GetHandValue() == BLACKJACK)
+            if (!player.HasBlackjack()) continue;
+            if (_dealer.FirstCardAceOrTen())
             {
-                playersWithNaturals.Add(p);
-            }
-            else
-            {
-                playersWithoutNaturals.Add(p);
+                _dealer.OpenAllCards();
+                if (_dealer.HasBlackjack())
+                {
+                    player.PlayerCash.ReturnCurrentBet();
+                }
+                else
+                {
+                    player.PlayerCash.WinRound(1.5f);
+                }
+                CheckOtherPlayersForNaturals(player);
+                _naturals = true;
             }
         }
+        yield return null;
+    }
 
-        // If some players have a natural, distribute money if possible
-        // and end the round
-        if (playersWithNaturals.Count > 0)
+    private void CheckOtherPlayersForNaturals(AbstractPlayerActions currentPlayer)
+    {
+        foreach (PlayerActions player in _players)
         {
-            if (dealer.HasNatural())
+            if (player == currentPlayer) continue;
+            if (player.HasBlackjack())
             {
-                foreach (Player p in playersWithNaturals)
-                {
-                    p.GetBackCurrentBet();
-                }
-                foreach (Player p in playersWithoutNaturals)
-                {
-                    p.ResetCurrentBet();
-                }
+                player.PlayerCash.ReturnCurrentBet();
             }
             else
             {
-                foreach (Player p in playersWithNaturals)
-                {
-                    p.WinRound(1.5f);
-                }
+                player.PlayerCash.LoseCurrentBet();
             }
-            return true;
         }
-        return false;
     }
 
     /// <summary>
@@ -156,102 +141,79 @@ public class BlackjackGame : MonoBehaviour, Observable
     /// </summary>
     private IEnumerator PlayersPlayTurns()
     {
-        // Players play their turn
-        foreach (Player p in players)
+        foreach (PlayerActions currentPlayer in _players)
         {
-            CurrentPlayer = p;
-            p.PlayTurn();
-            yield return new WaitWhile(() => p.IsPlaying);
-        }
-        
-        // Dealer plays his turn + display result
-        CurrentPlayer = dealer;
-        dealer.PlayTurn();
-        yield return new WaitForSeconds(3.0f);
-        
-        // End the playing
-        CurrentPlayer = null;
-        yield return null;
-    }
-
-    /// <summary>
-    /// Distribute wins and take losses
-    /// </summary>
-    private void EndRound()
-    {
-        int dealersHand = dealer.GetHandValue();
-        if (dealersHand > BLACKJACK)
-        {
-            EndRoundDealerBusted();
-        }
-        else
-        {
-            EndRoundDealerDidNotBust(dealersHand);
-        }
-    }
-
-    /// <summary>
-    /// End the round if the dealer did not go over 21
-    /// </summary>
-    /// <param name="dealersHand">Value of the dealer's hand</param>
-    private void EndRoundDealerDidNotBust(int dealersHand)
-    {
-        foreach (Player p in players)
-        {
-            int playersHand = p.GetHandValue();
-            if (playersHand > BLACKJACK || playersHand < dealersHand)
+            CurrentPlayer = currentPlayer;
+            yield return currentPlayer.PlayTurn();
+            if (PlayerBusted(currentPlayer))
             {
-                p.ResetCurrentBet();
-                Debug.Log("Player loses");
+                int lostAmount = currentPlayer.PlayerCash.LoseCurrentBet();
+                TurnInfoEvent?.Invoke(currentPlayer.PlayerName + " busted!\n-$" + lostAmount);
+                yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
             }
-            else if (playersHand == dealersHand)
+        }
+        CurrentPlayer = _dealer;
+        yield return _dealer.PlayTurn();
+    }
+
+    private static bool PlayerBusted(PlayerActions currentPlayer)
+    {
+        return currentPlayer.GetHandValue() > BLACKJACK;
+    }
+
+    private IEnumerator EndRound()
+    {
+        foreach (PlayerActions player in _players)
+        {
+            if (PlayerBusted(player)) continue;
+            if (PlayerWins(player))
             {
-                p.GetBackCurrentBet();
-                Debug.Log("Tie");
+                int wonAmount = player.PlayerCash.WinRound(1.0f);
+                TurnInfoEvent?.Invoke(player.PlayerName + " wins!\n" + "+$" + wonAmount);
+            }
+            else if (player.GetHandValue() == _dealer.GetHandValue())
+            {
+                int returnedBet = player.PlayerCash.ReturnCurrentBet();
+                TurnInfoEvent?.Invoke(player.PlayerName + " and the dealer are tied.\n+0$ - Bet returned");
             }
             else
             {
-                p.WinRound();
-                Debug.Log("Player wins");
+                int lostAmount = player.PlayerCash.LoseCurrentBet();
+                TurnInfoEvent?.Invoke(player.PlayerName + " has less than the dealer :(\n-$" + lostAmount);
             }
+            yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
         }
     }
 
-    /// <summary>
-    /// End the round if the dealer went over 21
-    /// </summary>
-    private void EndRoundDealerBusted()
+    private bool PlayerWins(PlayerActions player)
     {
-        foreach (Player p in players)
+        // Better score than the dealer, or dealer busted
+        return player.GetHandValue() > _dealer.GetHandValue() || _dealer.GetHandValue() > BLACKJACK;
+    }
+
+    private bool PlayersOutOfMoney()
+    {
+        foreach (PlayerActions player in _players)
         {
-            if (p.GetHandValue() <= BLACKJACK)
+            if (player.PlayerCash.CurrentCash > 0)
             {
-                p.WinRound();
-                Debug.Log("Player wins!");
-            }
-            else
-            {
-                p.ResetCurrentBet();
-                Debug.Log("Player loses");
+                return false;
             }
         }
+        return true;
     }
 
-    public void EndGame()
+    public IEnumerator EndGame()
     {
-        gameIsRunning = false;
-        Application.Quit();
+        _gameIsRunning = false;
+        TurnInfoEvent?.Invoke("All players are out of money!\nGame over!");
+        yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
+        SceneManager.LoadSceneAsync(_sceneToLoadOnEndGame);
     }
 
-    public void NotifyObservers()
+    public void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)
     {
-        foreach (GameObject g in observers)
-        {
-            Observer observer = g.GetComponent<Observer>();
-            if (observer != null)
-            {
-                observer.UpdateObserver();
-            }
-        }
+        Card newCard = _cardDeck.DrawCard();
+        abstractPlayer.AddCardToHand(newCard);
     }
 }

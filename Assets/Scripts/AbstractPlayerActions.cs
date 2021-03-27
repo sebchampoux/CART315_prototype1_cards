@@ -1,13 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractPlayer : MonoBehaviour, Observable
+public abstract class AbstractPlayerActions : MonoBehaviour
 {
-    [SerializeField] protected GameObject[] observers;
-    [SerializeField] protected BlackjackGame game;
-    [SerializeField] protected CardHand cardHand;
+    [SerializeField] protected string _playerName = "Player 1";
+    [SerializeField] protected BlackjackGame _game;
+    [SerializeField] protected CardHand _cardHand;
     protected bool _isPlaying = false;
+
+    public event EventHandler OnPlayStatusChange;
+
+    public string PlayerName
+    {
+        get { return _playerName; }
+    }
 
     public bool IsPlaying
     {
@@ -27,7 +35,7 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     /// </summary>
     public virtual void ClearRound()
     {
-        cardHand.ClearHand();
+        _cardHand.ClearHand();
         NotifyObservers();
     }
 
@@ -35,9 +43,9 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     /// Add a card to player's hand
     /// </summary>
     /// <param name="card">Card gameobject</param>
-    public virtual void AddCardToHand(GameObject card)
+    public virtual void AddCardToHand(Card card)
     {
-        cardHand.AddCard(card);
+        _cardHand.AddCard(card);
         NotifyObservers();
     }
 
@@ -47,40 +55,37 @@ public abstract class AbstractPlayer : MonoBehaviour, Observable
     /// <returns>hand's value</returns>
     public int GetHandValue()
     {
-        return cardHand.GetHandValue();
+        return _cardHand.GetHandValue();
     }
 
     public void DrawCard()
     {
-        game.PlayerDrawsCard(this);
-        if (cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
+        _game.PlayerDrawsCard(this);
+        if (_cardHand.GetHandValue() > BlackjackGame.BLACKJACK)
         {
             EndTurn();
         }
         NotifyObservers();
     }
 
-    public void NotifyObservers()
-    {
-        foreach (GameObject g in observers)
-        {
-            if (g.GetComponent<Observer>() != null)
-            {
-                g.GetComponent<Observer>().UpdateObserver();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Starts the player's turn
-    /// </summary>
-    public virtual void PlayTurn()
+    public virtual IEnumerator PlayTurn()
     {
         IsPlaying = true;
+        yield return null;
     }
 
     public void EndTurn()
     {
         IsPlaying = false;
+    }
+
+    public bool HasBlackjack()
+    {
+        return GetHandValue() == BlackjackGame.BLACKJACK;
+    }
+
+    protected void NotifyObservers()
+    {
+        OnPlayStatusChange?.Invoke(this, EventArgs.Empty);
     }
 }
