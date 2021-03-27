@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerInterface : MonoBehaviour
 {
+    [SerializeField] private BlackjackGame _blackjackGame;
     [SerializeField] private PlayerActions _playerAction;
 
     [SerializeField] private Button[] _actionsButtons;
@@ -13,12 +14,29 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private Text _currentCashText;
     [SerializeField] private Text _initialBetText;
     [SerializeField] private Text _currentBetText;
+    [SerializeField] private Text _roundRetroactionText;
 
     private void Start()
     {
+        _roundRetroactionText.gameObject.SetActive(false);
+
         _playerAction.OnPlayStatusChange += PlayStatusChange;
         _playerAction.PlayerCash.OnCashChange += PlayerCashChange;
+        _blackjackGame.TurnInfoEvent += OnBlackjackGameInfo;
         DisplayInitialValues();
+    }
+
+    private void OnBlackjackGameInfo(string message)
+    {
+        StartCoroutine(DisplayMessage(message));
+    }
+
+    private IEnumerator DisplayMessage(string message)
+    {
+        _roundRetroactionText.gameObject.SetActive(true);
+        _roundRetroactionText.text = message;
+        yield return new WaitForSeconds(BlackjackGame.RETROACTION_WAIT_TIME);
+        _roundRetroactionText.gameObject.SetActive(false);
     }
 
     private void DisplayInitialValues()

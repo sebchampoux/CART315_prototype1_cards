@@ -17,9 +17,10 @@ public class DealerActions : AbstractPlayerActions
         {
             DrawCard();
             _cardHand.FlipAllCards();
+            yield return new WaitForSeconds(0.5f);
         }
         EndTurn();
-        return null;
+        yield return new WaitForSeconds(1.0f);
     }
 
     public bool FirstCardAceOrTen()

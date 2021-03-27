@@ -2,17 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BlackjackGame : MonoBehaviour
 {
     public const int CARDS_ON_INITIAL_DISTRIBUTION = 2;
     public const int BLACKJACK = 21;
-
+    public const float RETROACTION_WAIT_TIME = 4.0f;
     [SerializeField] private CardDeck _cardDeck;
     [SerializeField] private PlayerActions[] _players;
     [SerializeField] private DealerActions _dealer;
+    [SerializeField] private string _sceneToLoadOnEndGame;
     private AbstractPlayerActions _currentPlayer = null;
     private bool _gameIsRunning = true;
+    private bool _naturals = false;
+
+    public delegate void TurnInfoDelegate(string message);
+    public event TurnInfoDelegate TurnInfoEvent;
 
     public AbstractPlayerActions CurrentPlayer
     {
@@ -38,8 +44,13 @@ public class BlackjackGame : MonoBehaviour
             yield return MakeInitialBets();
             yield return DistributeCards();
             yield return CheckForNaturals();
+            if (_naturals) continue;
             yield return PlayersPlayTurns();
             yield return EndRound();
+            if (PlayersOutOfMoney())
+            {
+                yield return EndGame();
+            }
         }
     }
 
@@ -50,6 +61,7 @@ public class BlackjackGame : MonoBehaviour
             p.ClearRound();
         }
         _dealer.ClearRound();
+        _naturals = false;
     }
 
     private IEnumerator MakeInitialBets()
@@ -90,7 +102,6 @@ public class BlackjackGame : MonoBehaviour
         foreach (PlayerActions player in _players)
         {
             if (!player.HasBlackjack()) continue;
-
             if (_dealer.FirstCardAceOrTen())
             {
                 _dealer.OpenAllCards();
@@ -103,7 +114,7 @@ public class BlackjackGame : MonoBehaviour
                     player.PlayerCash.WinRound(1.5f);
                 }
                 CheckOtherPlayersForNaturals(player);
-                throw new NotImplementedException("Natural, faut mettre fin à la ronde!");
+                _naturals = true;
             }
         }
         yield return null;
@@ -134,10 +145,11 @@ public class BlackjackGame : MonoBehaviour
         {
             CurrentPlayer = currentPlayer;
             yield return currentPlayer.PlayTurn();
-            yield return new WaitForSeconds(0.5f);
             if (PlayerBusted(currentPlayer))
             {
-                currentPlayer.PlayerCash.LoseCurrentBet();
+                int lostAmount = currentPlayer.PlayerCash.LoseCurrentBet();
+                TurnInfoEvent?.Invoke(currentPlayer.PlayerName + " busted!\n-$" + lostAmount);
+                yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
             }
         }
         CurrentPlayer = _dealer;
@@ -156,18 +168,21 @@ public class BlackjackGame : MonoBehaviour
             if (PlayerBusted(player)) continue;
             if (PlayerWins(player))
             {
-                player.PlayerCash.WinRound(1.0f);
+                int wonAmount = player.PlayerCash.WinRound(1.0f);
+                TurnInfoEvent?.Invoke(player.PlayerName + " wins!\n" + "+$" + wonAmount);
             }
             else if (player.GetHandValue() == _dealer.GetHandValue())
             {
-                player.PlayerCash.ReturnCurrentBet();
+                int returnedBet = player.PlayerCash.ReturnCurrentBet();
+                TurnInfoEvent?.Invoke(player.PlayerName + " and the dealer are tied.\n+0$ - Bet returned");
             }
             else
             {
-                player.PlayerCash.LoseCurrentBet();
+                int lostAmount = player.PlayerCash.LoseCurrentBet();
+                TurnInfoEvent?.Invoke(player.PlayerName + " has less than the dealer :(\n-$" + lostAmount);
             }
+            yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
         }
-        yield return new WaitForSeconds(1.0f);
     }
 
     private bool PlayerWins(PlayerActions player)
@@ -176,10 +191,24 @@ public class BlackjackGame : MonoBehaviour
         return player.GetHandValue() > _dealer.GetHandValue() || _dealer.GetHandValue() > BLACKJACK;
     }
 
-    public void EndGame()
+    private bool PlayersOutOfMoney()
+    {
+        foreach (PlayerActions player in _players)
+        {
+            if (player.PlayerCash.CurrentCash > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public IEnumerator EndGame()
     {
         _gameIsRunning = false;
-        Application.Quit();
+        TurnInfoEvent?.Invoke("All players are out of money!\nGame over!");
+        yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
+        SceneManager.LoadSceneAsync(_sceneToLoadOnEndGame);
     }
 
     public void PlayerDrawsCard(AbstractPlayerActions abstractPlayer)

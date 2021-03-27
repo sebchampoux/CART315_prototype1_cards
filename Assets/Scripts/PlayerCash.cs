@@ -59,21 +59,27 @@ public class PlayerCash : MonoBehaviour
         CurrentCash -= betAmount;
     }
 
-    public void LoseCurrentBet()
+    public int LoseCurrentBet()
     {
+        int lostAmount = CurrentBet;
         CurrentBet = 0;
+        return lostAmount;
     }
 
-    /// <param name="winRatio">1.0f (default value) = player won his initial bet</param>
-    public void WinRound(float winRatio = 1.0f)
+    /// <param name="winRatio">1.0f (default value) = player won the equivalent of his initial bet</param>
+    public int WinRound(float winRatio = 1.0f)
     {
-        CurrentCash += (int)((float)CurrentBet * winRatio);
-        ReturnCurrentBet();
+        int winAmount = CurrentBet + (int)((float)CurrentBet * winRatio);
+        CurrentBet = 0;
+        CurrentCash += winAmount;
+        return winAmount;
     }
 
-    public void ReturnCurrentBet()
+    public int ReturnCurrentBet()
     {
+        int betReturned = CurrentBet;
         CurrentCash += CurrentBet;
         CurrentBet = 0;
+        return betReturned;
     }
 }
