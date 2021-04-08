@@ -7,6 +7,11 @@ public class Card : MonoBehaviour
     [SerializeField] private int cardValue = 0;
     private bool _cardIsVisible = false;
 
+    public bool CardIsVisible
+    {
+        get { return transform.rotation.y != 0; }
+    }
+
     public void Start()
     {
         if (_cardIsVisible)

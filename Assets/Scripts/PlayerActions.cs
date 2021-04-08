@@ -40,8 +40,8 @@ public class PlayerActions : AbstractPlayerActions
     /// <param name="card"></param>
     public override void AddCardToHand(Card card)
     {
-        base.AddCardToHand(card);
         card.FlipCard();
+        base.AddCardToHand(card);
     }
 
     public override IEnumerator PlayTurn()

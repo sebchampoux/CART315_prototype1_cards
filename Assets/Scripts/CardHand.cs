@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,19 @@ using UnityEngine;
 public class CardHand : MonoBehaviour
 {
     private readonly IList<Card> _cards = new List<Card>();
-    public Vector3 _cardsPositionOffset = new Vector3(0.5f, 0, -5.0f);
+    public Vector3 _cardsPositionOffset = new Vector3(0.5f, 0, -0.5f);
+
+    public event EventHandler CardSumChange;
+    public Vector3 CardsPositionOffset
+    {
+        get { return _cardsPositionOffset; }
+    }
 
     public void AddCard(Card card)
     {
         _cards.Add(card);
         PositionNewCard(card.gameObject);
+        CardSumChange?.Invoke(this, EventArgs.Empty);
     }
 
     private void PositionNewCard(GameObject cardGameObject)
@@ -27,6 +35,12 @@ public class CardHand : MonoBehaviour
             Destroy(c.gameObject);
         }
         _cards.Clear();
+        CardSumChange?.Invoke(this, EventArgs.Empty);
+    }
+
+    public int GetNumberOfCards()
+    {
+        return _cards.Count;
     }
 
     public int GetHandValue()
@@ -100,6 +114,19 @@ public class CardHand : MonoBehaviour
         {
             c.FlipCard();
         }
+        CardSumChange?.Invoke(this, EventArgs.Empty);
+    }
+
+    public bool ContainsHiddenCards()
+    {
+        foreach (Card c in _cards)
+        {
+            if (!c.CardIsVisible)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Card GetFirstCard()
