@@ -5,6 +5,8 @@ To playtest the game, please start at the `Scenes/MainMenu.unity` scene.
 ## Final version
 [Design journal](https://github.com/sebchampoux/CART315_prototype1_cards/wiki/Final-version-design-journal)
 
+[Executable download](https://booink.itch.io/cart315-blackjack)
+
 ## Iteration 1
 [Design journal](https://github.com/sebchampoux/CART315_prototype1_cards/wiki/Iteration-1-design-journal)
 
