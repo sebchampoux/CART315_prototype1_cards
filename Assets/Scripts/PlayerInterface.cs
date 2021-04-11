@@ -9,6 +9,7 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private PlayerActions _playerAction;
 
     [SerializeField] private Button[] _actionsButtons;
+    [SerializeField] private Button _doubleDownButton;
     [SerializeField] private Button _initialBetButton;
     [SerializeField] private Slider _initialBetSlider;
     [SerializeField] private Text _currentCashText;
@@ -73,6 +74,14 @@ public class PlayerInterface : MonoBehaviour
         {
             b.interactable = _playerAction.IsPlaying;
         }
+        ToggleDoubleDownButton();
+    }
+
+    private void ToggleDoubleDownButton()
+    {
+        if (!_playerAction.IsPlaying) return;
+        PlayerCash pc = _playerAction.GetComponent<PlayerCash>();
+        _doubleDownButton.interactable = pc.CurrentCash >= pc.CurrentBet;
     }
 
     public void UpdateInitialBet()

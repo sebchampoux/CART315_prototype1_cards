@@ -9,6 +9,7 @@ public class PlayerCash : MonoBehaviour
     [SerializeField] private int _defaultInitialBet = 50;
     private int _initialBet = 0;
     private int _currentBet = 0;
+    [SerializeField] private AudioSource _betSound;
 
     public event EventHandler OnCashChange;
     public int CurrentCash
@@ -55,8 +56,9 @@ public class PlayerCash : MonoBehaviour
     public void Bet()
     {
         int betAmount = Mathf.Min(InitialBet, CurrentCash);
-        CurrentBet = betAmount;
+        CurrentBet += betAmount;
         CurrentCash -= betAmount;
+        _betSound.Play();
     }
 
     public int LoseCurrentBet()

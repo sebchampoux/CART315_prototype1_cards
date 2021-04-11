@@ -7,6 +7,7 @@ public class PlayerActions : AbstractPlayerActions
 {
     private PlayerCash _playerCash;
     private bool _waitingForInitialBet = false;
+    [SerializeField] private AudioSource _turnStartSound;
 
     public bool WaitingForInitialBet
     {
@@ -46,6 +47,7 @@ public class PlayerActions : AbstractPlayerActions
 
     public override IEnumerator PlayTurn()
     {
+        _turnStartSound.Play();
         StartCoroutine(base.PlayTurn());
         yield return new WaitWhile(() => IsPlaying);
     }
@@ -59,6 +61,7 @@ public class PlayerActions : AbstractPlayerActions
 
     public IEnumerator MakeInitialBet()
     {
+        _turnStartSound.Play();
         WaitingForInitialBet = true;
         yield return new WaitWhile(() => WaitingForInitialBet);
     }

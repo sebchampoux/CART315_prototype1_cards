@@ -16,6 +16,8 @@ public class BlackjackGame : MonoBehaviour
     private AbstractPlayerActions _currentPlayer = null;
     private bool _gameIsRunning = true;
     private bool _naturals = false;
+    [SerializeField] private int _winThreshold = 1500;
+    [SerializeField] private AudioSource _cardsDistributionSound;
 
     public delegate void TurnInfoDelegate(string message);
     public event TurnInfoDelegate TurnInfoEvent;
@@ -47,9 +49,13 @@ public class BlackjackGame : MonoBehaviour
             if (_naturals) continue;
             yield return PlayersPlayTurns();
             yield return EndRound();
-            if (PlayersOutOfMoney())
+            if (APlayerWon())
             {
-                yield return EndGame();
+                yield return EndGame(true);
+            }
+            else if (PlayersOutOfMoney())
+            {
+                yield return EndGame(false);
             }
         }
     }
@@ -77,6 +83,7 @@ public class BlackjackGame : MonoBehaviour
     /// </summary>
     private IEnumerator DistributeCards()
     {
+        _cardsDistributionSound.Play();
         for (int i = 0; i < CARDS_ON_INITIAL_DISTRIBUTION; i++)
         {
             Card card;
@@ -203,10 +210,29 @@ public class BlackjackGame : MonoBehaviour
         return true;
     }
 
-    public IEnumerator EndGame()
+    private bool APlayerWon()
+    {
+        foreach (PlayerActions player in _players)
+        {
+            if (player.PlayerCash.CurrentCash > _winThreshold)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEnumerator EndGame(bool won)
     {
         _gameIsRunning = false;
-        TurnInfoEvent?.Invoke("All players are out of money!\nGame over!");
+        if (won)
+        {
+            TurnInfoEvent?.Invoke("Your bank exceeds $" + _winThreshold + ", you win!\nNice job!");
+        }
+        else
+        {
+            TurnInfoEvent?.Invoke("All players are out of money!\nGame over!");
+        }
         yield return new WaitForSeconds(RETROACTION_WAIT_TIME);
         SceneManager.LoadSceneAsync(_sceneToLoadOnEndGame);
     }
